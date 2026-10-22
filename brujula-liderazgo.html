@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Brújula de Liderazgo</title>
+<meta name="description" content="Descubre cómo te comunicas y cómo manejas los conflictos, y recibe tu perfil de liderazgo.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A7%AD%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+:root{
+  --pri:#1F4E5F;--pri-d:#123642;--pri-m:#2D6A7E;
+  --acc:#CF6A33;--acc-l:#F4B37A;--acc-bg:#FDF3EA;--acc-border:#F0C9A6;
+  --ink:#1E2A2F;--bg:#F5F3EF;--card:#FFFFFF;--line:#E6E1D9;--muted:#6C7378;
+  --red:#C8435A;--green:#2F8F63;--amber:#D99A22;
+  --shadow:0 6px 22px rgba(18,54,66,.08);--r:14px;
+  --font:'Plus Jakarta Sans',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--ink);font-family:var(--font);-webkit-font-smoothing:antialiased}
+body{max-width:560px;margin:0 auto;min-height:100vh;padding-bottom:60px}
+h1,h2,h3{font-weight:800;letter-spacing:-.3px}
+.screen{display:none}.screen.active{display:block}
+
+/* TOP */
+.top{background:linear-gradient(140deg,var(--pri-d) 0%,var(--pri) 60%,var(--pri-m) 100%);color:#fff;padding:24px 22px 28px;position:relative;overflow:hidden}
+.top::before{content:'';position:absolute;right:-50px;top:-50px;width:180px;height:180px;border:28px solid var(--acc-l);border-radius:50%;opacity:.14}
+.top::after{content:'';position:absolute;right:46px;bottom:-34px;width:92px;height:92px;background:var(--acc);border-radius:50%;opacity:.22}
+.eyebrow{font-size:10.5px;letter-spacing:2.2px;font-weight:700;color:var(--acc-l);text-transform:uppercase;position:relative;z-index:2;display:flex;align-items:center;gap:6px}
+.top h1{font-size:25px;margin-top:8px;line-height:1.15;position:relative;z-index:2}
+.top h1 em{color:var(--acc-l);font-style:normal}
+.top p{font-size:13.5px;color:#CFE1E6;margin-top:8px;position:relative;z-index:2;max-width:420px;line-height:1.55}
+.group-badge{display:inline-flex;align-items:center;gap:5px;margin-top:12px;position:relative;z-index:2;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);color:#fff;font-size:11.5px;font-weight:600;padding:4px 11px;border-radius:20px}
+.acc-bar{background:linear-gradient(90deg,var(--acc),var(--acc-l));height:3px;width:100%}
+
+/* LAYOUT */
+.wrap{padding:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:18px;margin-bottom:14px}
+.card.acc-card{border-color:var(--acc-border);background:linear-gradient(135deg,#FFFCF8 0%,var(--acc-bg) 100%)}
+.step-label{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--acc);margin-bottom:4px}
+.step-label .sl-dot{width:6px;height:6px;border-radius:50%;background:var(--acc);flex-shrink:0}
+.card h2{font-size:18px;margin-bottom:4px;color:var(--ink)}
+.hint{font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.5}
+
+/* ENTRADA */
+.gate-title{font-size:20px;font-weight:800;margin-bottom:4px}
+.gate-sub{font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.5}
+label.lbl{display:block;font-size:13px;font-weight:700;margin:12px 0 6px}
+label.lbl .opt-tag{font-weight:500;color:var(--muted)}
+.field{width:100%;padding:13px 14px;font-size:15.5px;border:1.5px solid var(--line);border-radius:12px;background:#fff;font-family:inherit;color:var(--ink)}
+.field::placeholder{color:#B5BBBF}
+.field:focus{outline:none;border-color:var(--acc);border-width:2px}
+.field.pin{letter-spacing:6px;font-weight:700;font-size:18px;max-width:150px}
+.field-help{font-size:11.5px;color:var(--muted);margin-top:5px;line-height:1.45}
+.gate-err{font-size:12.5px;color:var(--red);font-weight:600;min-height:16px;margin-top:8px}
+.privacy{font-size:11.5px;color:var(--muted);line-height:1.5;margin-top:12px;padding:10px 12px;background:#F7F5F1;border-radius:10px}
+.org-link{display:block;margin:6px auto 0;background:none;border:none;font-family:inherit;font-size:12.5px;color:var(--muted);text-decoration:underline;cursor:pointer}
+.gate-panel{display:none;margin-top:4px}
+
+/* BUTTONS */
+.btn{padding:14px 20px;font-size:15px;font-weight:700;border:none;border-radius:12px;cursor:pointer;font-family:inherit;transition:.15s;display:inline-flex;align-items:center;justify-content:center;gap:6px;color:#fff}
+.btn:active{transform:translateY(1px)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn.acc{background:linear-gradient(135deg,#C55F28,var(--acc));box-shadow:0 5px 18px rgba(207,106,51,.35)}
+.btn.pri{background:var(--pri);box-shadow:0 5px 16px rgba(31,78,95,.25)}
+.btn.ghost{background:none;border:1.5px solid var(--line);color:var(--muted);box-shadow:none}
+.btn.full{width:100%}
+.btn.sm{padding:9px 14px;font-size:13px;border-radius:9px}
+.logout-row{display:flex;justify-content:flex-end;align-items:center;gap:10px;padding:8px 16px 0;flex-wrap:wrap}
+.logout-btn{background:none;border:none;font-size:12px;color:var(--muted);cursor:pointer;text-decoration:underline;font-family:inherit}
+.save-status{font-size:12.5px;text-align:center;margin-top:8px;min-height:18px;font-weight:600;line-height:1.45}
+.save-status.ok{color:var(--green)}.save-status.err{color:var(--red)}.save-status.loading{color:var(--muted)}
+.clearbtn{width:100%;background:none;border:1.5px solid var(--line);color:var(--muted);font-size:13px;font-weight:600;padding:11px;border-radius:11px;cursor:pointer;font-family:inherit;margin-top:8px;transition:.15s}
+.part-bridge .clearbtn{border-color:rgba(255,255,255,.3);color:#CFE1E6;background:rgba(255,255,255,.06)}
+.part-bridge .clearbtn.warn{border-color:#FF9A9A;color:#FF9A9A;background:rgba(255,80,80,.12)}
+.clearbtn.warn{border-color:var(--red);color:var(--red);background:#FDF0F1}
+
+/* PROGRESS */
+.prog-wrap{margin-bottom:4px}
+.prog-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.prog-lbl{font-size:12px;font-weight:600;color:var(--muted)}
+.prog-num{font-size:12px;font-weight:800;color:var(--acc)}
+.prog-bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--acc),var(--acc-l));border-radius:3px;transition:width .4s ease}
+
+/* QUESTION */
+.q-num{font-size:11px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+.q-text{font-size:16.5px;font-weight:700;color:var(--ink);line-height:1.45;margin-bottom:14px}
+.opt-list{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;align-items:flex-start;gap:11px;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;cursor:pointer;font-family:inherit;background:#fff;text-align:left;transition:.18s;font-size:14px;line-height:1.45;color:var(--ink);width:100%}
+.opt:hover{border-color:var(--acc-border);background:var(--acc-bg)}
+.opt.sel{border-color:var(--acc);background:var(--acc-bg);font-weight:700;color:var(--pri-d)}
+.opt .ol{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--muted);flex-shrink:0;margin-top:1px;transition:.18s}
+.opt.sel .ol{border-color:var(--acc);background:var(--acc);color:#fff}
+.q-nav{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:10px}
+
+/* AVATAR */
+.style-avatar{text-align:center;padding:20px 16px 12px}
+.style-avatar .anim-char{font-size:70px;display:block;animation:float 2.6s ease-in-out infinite;margin-bottom:8px;filter:drop-shadow(0 6px 12px rgba(0,0,0,.16))}
+@keyframes float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-9px) scale(1.05)}}
+.style-avatar .av-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:30px;font-size:14px;font-weight:800;color:#fff;margin-bottom:4px}
+.av-badge.DI,.av-badge.COM{background:linear-gradient(135deg,#A9324A,#C8435A)}
+.av-badge.VI{background:linear-gradient(135deg,#B5561F,#CF6A33)}
+.av-badge.CO,.av-badge.COL{background:linear-gradient(135deg,#226E4B,#2F8F63)}
+.av-badge.SI{background:linear-gradient(135deg,#123642,#1F4E5F)}
+.av-badge.NEG{background:linear-gradient(135deg,#B57D12,#D99A22)}
+.av-badge.EV{background:linear-gradient(135deg,#5F676C,#8A9298)}
+.av-badge.CED{background:linear-gradient(135deg,#3C5C8C,#5578AD)}
+.style-avatar .av-sub{font-size:12px;color:var(--muted);display:block}
+
+/* RESULT */
+.result-hero{padding:20px 18px;border-radius:var(--r);margin-bottom:12px;position:relative;overflow:hidden;background:linear-gradient(140deg,var(--pri-d),var(--pri))}
+.result-hero::before{content:'🧭';position:absolute;right:16px;top:10px;font-size:46px;opacity:.14}
+.result-hero .rh-lbl{font-size:10px;color:var(--acc-l);font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+.result-hero .rh-style{font-size:25px;font-weight:800;color:#fff;line-height:1.1;margin-bottom:4px}
+.result-hero .rh-sub{font-size:12.5px;color:#CFE1E6;line-height:1.5}
+
+.score-bars{display:flex;flex-direction:column;gap:8px;margin:10px 0}
+.sbar-row{display:flex;align-items:center;gap:8px}
+.sbar-lbl{font-size:12px;font-weight:600;width:98px;flex-shrink:0;color:var(--ink)}
+.sbar-track{flex:1;height:9px;background:var(--line);border-radius:5px;overflow:hidden}
+.sbar-fill{height:100%;border-radius:5px;transition:width .7s cubic-bezier(.4,0,.2,1)}
+.sbar-pct{font-size:12px;font-weight:700;color:var(--ink);width:40px;text-align:right;flex-shrink:0}
+.sbar-fill.di,.sbar-fill.com{background:linear-gradient(90deg,#C8435A,#E77C8E)}
+.sbar-fill.vi{background:linear-gradient(90deg,var(--acc),var(--acc-l))}
+.sbar-fill.co,.sbar-fill.col{background:linear-gradient(90deg,var(--green),#6FCB9C)}
+.sbar-fill.si{background:linear-gradient(90deg,var(--pri),#5B9AAE)}
+.sbar-fill.neg{background:linear-gradient(90deg,var(--amber),#F0C66B)}
+.sbar-fill.ev{background:linear-gradient(90deg,#6C7378,#A7AEB2)}
+.sbar-fill.ced{background:linear-gradient(90deg,#4767A0,#86A3D2)}
+.sbar-row.top-style .sbar-lbl{color:var(--pri);font-weight:800}
+.sbar-crown{font-size:11px;margin-left:2px;color:var(--acc)}
+
+/* KILMANN GRID */
+.kil-grid-wrap{border-radius:12px;overflow:hidden;border:1px solid var(--line);margin:10px 0}
+.kil-grid-title{background:linear-gradient(135deg,var(--pri-d),var(--pri));color:#fff;padding:10px 14px;font-size:12px;font-weight:700;letter-spacing:.4px}
+.kil-grid-table{width:100%;border-collapse:collapse;font-size:11px}
+.kil-grid-table th{background:#F1EEE8;padding:7px 6px;text-align:center;font-weight:700;color:var(--pri);border-bottom:2px solid var(--pri);border-right:1px solid var(--line)}
+.kil-grid-table th:first-child{text-align:left;min-width:80px}
+.kil-grid-table td{padding:6px 6px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);text-align:center;font-size:11px;color:var(--ink)}
+.kil-grid-table td:first-child{font-weight:600;text-align:left}
+.kil-grid-table tr.zona-excess td:first-child{background:#FBE1E5;color:#A9324A;font-weight:700}
+.kil-grid-table tr.zona-high td:first-child{background:#FDF0D8;color:#9C6A0C;font-weight:700}
+.kil-grid-table tr.zona-flex td:first-child{background:#E5F4EC;color:var(--green);font-weight:700}
+.kil-grid-table tr.zona-low td:first-child{background:#E7F0F3;color:var(--pri);font-weight:700}
+.kil-grid-table tr.zona-lack td:first-child{background:#F1EEE8;color:var(--muted);font-weight:700}
+.kil-grid-table td.mark-my{background:linear-gradient(135deg,var(--acc-bg),#FCE3CC);font-weight:800;color:var(--pri-d);position:relative}
+.kil-grid-table td.mark-my::after{content:'★';position:absolute;top:1px;right:2px;font-size:8px;color:var(--acc)}
+.zona-legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.zona-legend-item{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:600}
+.zona-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+
+/* COACH */
+.coach-block{background:linear-gradient(135deg,#FFFCF8,var(--acc-bg));border:1px solid var(--acc-border);border-radius:13px;padding:15px;margin-bottom:12px}
+.coach-avatar{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.coach-ic{width:38px;height:38px;background:linear-gradient(135deg,var(--acc),var(--acc-l));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.coach-tag{font-size:10px;font-weight:700;color:var(--acc);letter-spacing:1px;text-transform:uppercase}
+.coach-name{font-size:13px;font-weight:700;color:var(--ink)}
+.coach-text{font-size:14px;line-height:1.65;color:var(--ink)}
+.coach-text strong{color:var(--pri)}
+.coach-sub{margin-top:10px;font-size:13px;line-height:1.6}
+.coach-sub .cs-h{color:var(--acc);font-size:11px;text-transform:uppercase;letter-spacing:1px;font-weight:800;display:block;margin-bottom:2px}
+.sw-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.sw-item{padding:10px 12px;border-radius:11px}
+.sw-item.str{background:#E9F6EF;border:1px solid #B5DEC6}
+.sw-item.wat{background:#FDEEE6;border:1px solid #F3C8B1}
+.sw-icon{font-size:15px;margin-bottom:4px}
+.sw-title{font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px}
+.sw-item.str .sw-title{color:var(--green)}
+.sw-item.wat .sw-title{color:#B5501F}
+.sw-body{font-size:12px;line-height:1.5;color:var(--ink)}
+.coach-tip{margin-top:10px;padding:10px 12px;background:rgba(207,106,51,.1);border-left:3px solid var(--acc);border-radius:6px;font-size:13px;color:var(--pri-d);font-weight:600;line-height:1.5}
+
+/* BRIDGE */
+.part-bridge{background:linear-gradient(135deg,var(--pri-d),var(--pri));border-radius:var(--r);padding:20px;margin-bottom:14px;text-align:center}
+.part-bridge .pb-icon{font-size:40px;display:block;margin-bottom:8px;animation:float 2.6s ease-in-out infinite}
+.part-bridge h3{color:var(--acc-l);font-size:18px;margin-bottom:6px}
+.part-bridge p{color:#CFE1E6;font-size:13px;line-height:1.5;margin-bottom:14px}
+
+/* SYNTHESIS */
+.synth{background:linear-gradient(140deg,var(--pri-d),var(--pri));border-radius:var(--r);padding:20px;margin-bottom:12px}
+.synth .s-tag{font-size:10px;color:var(--acc-l);font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.synth .s-tag::before,.synth .s-tag::after{content:'';flex:1;height:1px;background:rgba(244,179,122,.3)}
+.synth-duo{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.synth-card{border-radius:12px;padding:12px 14px;text-align:center}
+.synth-card.comm-card{background:rgba(207,106,51,.2);border:1.5px solid rgba(244,179,122,.45)}
+.synth-card.kil-card{background:rgba(47,143,99,.18);border:1.5px solid rgba(111,203,156,.4)}
+.synth-card .sc-label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
+.synth-card.comm-card .sc-label{color:var(--acc-l)}
+.synth-card.kil-card .sc-label{color:#8FDDB5}
+.synth-card .sc-char{font-size:28px;display:block;margin-bottom:2px}
+.synth-card .sc-name{font-size:13px;font-weight:800;color:#fff}
+.synth-divider{text-align:center;margin:4px 0;color:var(--acc-l);font-size:11px;font-weight:700;opacity:.8}
+.synth-body{font-size:14px;color:#D7E6EA;line-height:1.7;margin:12px 0}
+.synth-body strong{color:var(--acc-l)}
+.synth-super{background:rgba(207,106,51,.14);border:1px solid rgba(244,179,122,.35);border-radius:10px;padding:12px 14px;margin:12px 0}
+.synth-super .ss-label{font-size:10px;font-weight:700;color:var(--acc-l);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px}
+.synth-super .ss-text{font-size:14px;font-weight:700;color:#FCE3CC;line-height:1.5}
+.synth-actions{margin-top:12px;display:flex;flex-direction:column;gap:7px}
+.synth-action{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#D7E6EA;line-height:1.55}
+.synth-action .sa-arrow{color:var(--acc-l);font-weight:800;font-size:14px;flex-shrink:0;margin-top:1px}
+
+.sect-div{display:flex;align-items:center;gap:10px;margin:16px 0 12px}
+.sect-div .sd-line{flex:1;height:1px;background:var(--line)}
+.sect-div .sd-label{font-size:11px;font-weight:700;color:var(--acc);letter-spacing:1.4px;text-transform:uppercase;white-space:nowrap;padding:5px 10px;background:var(--acc-bg);border:1px solid var(--acc-border);border-radius:20px}
+
+/* PANEL ORGANIZADOR */
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.kpi-box{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 10px;text-align:center;box-shadow:var(--shadow)}
+.kpi-val{font-size:25px;font-weight:800;color:var(--pri);line-height:1.2;min-height:30px;display:flex;align-items:center;justify-content:center}
+.kpi-lbl{font-size:10px;color:var(--muted);margin-top:5px;line-height:1.3;text-transform:uppercase;letter-spacing:.3px;font-weight:700}
+.kpi-box.acc .kpi-val{color:var(--acc)}.kpi-box.green .kpi-val{color:var(--green)}.kpi-box.red .kpi-val{color:var(--red)}
+.refresh-btn{background:#fff;border:1.5px solid var(--line);color:var(--pri);font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;padding:7px 13px;border-radius:9px;transition:.15s}
+.refresh-btn:hover{border-color:var(--acc);color:var(--acc)}
+.refresh-btn:disabled{opacity:.6}
+.alert-box{border-radius:10px;padding:12px 14px;margin-bottom:10px;font-size:13px;line-height:1.45}
+.alert-box.green{background:#E6F5EC;border-left:3px solid var(--green);color:#1D5C3F}
+.alert-box.amber{background:#FFF6E2;border-left:3px solid var(--amber);color:#7A5508}
+.alert-box.red{background:#FCEBEE;border-left:3px solid var(--red);color:#82263A}
+.section-title{font-size:12px;font-weight:800;color:var(--pri);text-transform:uppercase;letter-spacing:.6px;margin:18px 0 10px}
+.chart-card{padding:16px 14px 10px}
+.chart-card .cc-title{font-size:12.5px;font-weight:700;color:var(--ink);margin-bottom:2px}
+.chart-card .cc-sub{font-size:11.5px;color:var(--muted);margin-bottom:10px}
+.filter-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.filter-row select{flex:1;min-width:160px;padding:10px 12px;font-family:inherit;font-size:14px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+.link-out{display:flex;gap:6px;margin-top:10px}
+.link-out input{flex:1;min-width:0;padding:10px 12px;font-family:inherit;font-size:12.5px;border:1.5px solid var(--line);border-radius:10px;background:#F7F5F1;color:var(--ink)}
+.emp-row{background:#fff;border:1px solid var(--line);border-radius:11px;padding:12px;margin-bottom:8px;cursor:pointer;transition:.15s}
+.emp-row:hover{border-color:var(--acc-border);background:var(--acc-bg)}
+.emp-row .en{font-size:14px;font-weight:700;display:flex;justify-content:space-between;gap:8px}
+.emp-row .eb{font-size:12px;color:var(--muted);margin-top:1px}
+.emp-row .ed{font-size:11px;color:var(--muted);font-weight:500;white-space:nowrap}
+.group-chip{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:20px;background:#E7F0F3;color:var(--pri);margin-right:4px}
+.style-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;margin-top:6px;margin-right:4px}
+.sp-di,.sp-com{background:#FBE1E5;color:#A9324A}.sp-vi{background:var(--acc-bg);color:#B5561F}
+.sp-co,.sp-col{background:#E5F4EC;color:var(--green)}.sp-si{background:#E7F0F3;color:var(--pri)}
+.sp-neg{background:#FDF0D8;color:#9C6A0C}.sp-ev{background:#F1EEE8;color:var(--muted)}.sp-ced{background:#E7EDF7;color:#3C5C8C}
+.live{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);margin-top:12px;justify-content:center}
+.pulse{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(10,25,30,.55);z-index:200;display:none;align-items:flex-end;justify-content:center}
+.modal-bg.on{display:flex}
+.modal-sheet{background:#fff;width:100%;max-width:560px;border-radius:20px 20px 0 0;padding:22px 18px 32px;max-height:88vh;overflow-y:auto}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 20px;border-radius:11px;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,.2);z-index:300;opacity:0;transition:.3s;max-width:88%;text-align:center;pointer-events:none}
+.toast.on{opacity:1}
+.radar-wrap{padding:12px 0 4px;display:flex;flex-direction:column;align-items:center}
+.radar-wrap canvas{max-width:100%;height:auto}
+
+/* BONUS TRACK */
+.bonus{position:relative;overflow:hidden;border-radius:var(--r);padding:22px 18px 20px;margin:4px 0 14px;color:#E9E4FF;
+  background:radial-gradient(circle at 20% 15%,rgba(255,255,255,.9) 0 1px,transparent 1.5px),radial-gradient(circle at 78% 22%,rgba(255,255,255,.8) 0 1px,transparent 1.5px),radial-gradient(circle at 60% 70%,rgba(255,255,255,.7) 0 1px,transparent 1.5px),radial-gradient(circle at 35% 85%,rgba(255,255,255,.8) 0 1px,transparent 1.5px),radial-gradient(circle at 90% 60%,rgba(255,255,255,.6) 0 1px,transparent 1.5px),linear-gradient(150deg,#1B1640 0%,#2E2468 55%,#4A2F6E 100%)}
+.bonus .b-tag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;color:#FFD9A8;background:rgba(255,217,168,.12);border:1px solid rgba(255,217,168,.35);padding:4px 10px;border-radius:20px}
+.bonus .b-twins{font-size:46px;text-align:center;margin:14px 0 4px;animation:float 3s ease-in-out infinite}
+.bonus h3{text-align:center;font-size:19px;color:#fff;margin-bottom:4px}
+.bonus .b-sub{text-align:center;font-size:12px;color:#B9B0E6;margin-bottom:14px}
+.bonus .b-text{font-size:14px;line-height:1.7;color:#E9E4FF;margin-bottom:10px}
+.bonus .b-text strong{color:#FFD9A8}
+.bonus .b-meter{margin:16px 0 6px}
+.bonus .b-meter-top{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#fff;margin-bottom:6px}
+.bonus .b-track{height:10px;background:rgba(255,255,255,.14);border-radius:6px;overflow:hidden}
+.bonus .b-fill{height:100%;width:0;border-radius:6px;background:linear-gradient(90deg,#F4B37A,#FF8FB1,#B79CFF);transition:width 2.2s cubic-bezier(.3,0,.2,1)}
+.bonus .b-note{font-size:11px;color:#9F96D0;font-style:italic}
+.bonus .b-ps{margin-top:16px;padding-top:14px;border-top:1px dashed rgba(255,255,255,.22);font-size:14px;color:#fff;line-height:1.6;text-align:center}
+@media(max-width:400px){.sw-grid{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- ENTRADA -->
+<div class="screen active" id="scStart">
+  <div class="top">
+    <div class="eyebrow">🧭 Brújula de Liderazgo</div>
+    <h1>Descubre cómo<br><em>lideras</em></h1>
+    <p>Dos tests cortos: cómo te comunicas y cómo manejas los conflictos. Al final recibes tu perfil de liderazgo personalizado.</p>
+    <span class="group-badge" id="groupBadge" style="display:none"></span>
+  </div>
+  <div class="acc-bar"></div>
+  <div class="wrap">
+    <div class="card" id="startCard">
+      <div class="gate-title">Antes de empezar</div>
+      <div class="gate-sub">Toma unos 10 minutos. No hay respuestas buenas ni malas: elige lo que más se parece a ti.</div>
+
+      <label class="lbl" for="inName">Tu nombre y apellido</label>
+      <input class="field" id="inName" type="text" autocomplete="name" placeholder="Ej.: Ana Torres" maxlength="60">
+
+      <label class="lbl" for="inDni">Tu DNI</label>
+      <input class="field pin" id="inDni" type="text" inputmode="numeric" maxlength="8" placeholder="12345678" autocomplete="off" style="max-width:220px;letter-spacing:3px">
+      <div class="field-help">Con tu DNI podrás volver a ver tu resultado cuando quieras.</div>
+
+      <div class="gate-err" id="startErr"></div>
+      <button class="btn acc full" id="startBtn" style="margin-top:6px">Comenzar ✦</button>
+      <div class="privacy">🔒 Tus respuestas y tu perfil los podrá ver la persona que te compartió este enlace.</div>
+    </div>
+
+    <button class="org-link" id="orgToggle">Soy quien organiza</button>
+    <div class="card gate-panel" id="orgPanel" style="margin-top:12px">
+      <label class="lbl" for="inOrg" style="margin-top:0">Contraseña del organizador</label>
+      <input class="field" id="inOrg" type="password" placeholder="••••••••" autocomplete="off">
+      <div class="gate-err" id="orgErr"></div>
+      <button class="btn pri full" id="orgBtn" style="margin-top:6px">Entrar al panel</button>
+    </div>
+  </div>
+</div>
+
+<!-- TEST -->
+<div class="screen" id="scTest">
+  <div class="top">
+    <div class="eyebrow">🧭 Brújula de Liderazgo</div>
+    <h1 id="hiName">Hola ✦</h1>
+    <p id="hiSub"></p>
+  </div>
+  <div class="acc-bar"></div>
+  <div class="logout-row"><button class="logout-btn" onclick="doLogout()">Salir</button></div>
+  <div class="wrap">
+
+    <div class="card acc-card" id="resumeCard" style="display:none">
+      <div class="step-label"><span class="sl-dot"></span>Ya tienes un perfil guardado</div>
+      <h2>¡Qué bueno verte de nuevo!</h2>
+      <p class="hint" id="resumeTxt"></p>
+      <button class="btn acc full" id="resumeView">Ver mi último resultado</button>
+      <button class="btn ghost full" id="resumeNew" style="margin-top:8px">Hacer el test de nuevo</button>
+    </div>
+
+    <div class="card acc-card" id="phaseCard">
+      <div class="step-label"><span class="sl-dot"></span><span id="phaseLbl">Parte 1 de 2</span></div>
+      <h2 id="phaseTitle">Tu estilo de comunicación</h2>
+      <p class="hint" id="phaseHint"></p>
+      <div class="prog-wrap">
+        <div class="prog-top"><span class="prog-lbl" id="progLbl">Pregunta 1 de 24</span><span class="prog-num" id="progNum">0%</span></div>
+        <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <div class="card" id="qCard">
+      <div class="q-num" id="qNum">Pregunta 1</div>
+      <div class="q-text" id="qText"></div>
+      <div class="opt-list" id="optList"></div>
+      <div class="q-nav">
+        <button class="btn ghost sm" id="prevBtn" onclick="navQ(-1)">← Anterior</button>
+        <button class="btn acc sm" id="nextBtn" onclick="navQ(1)">Siguiente →</button>
+      </div>
+    </div>
+
+    <!-- RESULTADO PARTE 1 -->
+    <div id="commResultSection" style="display:none">
+      <div class="sect-div"><div class="sd-line"></div><div class="sd-label">Tu estilo de comunicación</div><div class="sd-line"></div></div>
+      <div class="card">
+        <div class="style-avatar">
+          <span class="anim-char" id="commChar"></span>
+          <span class="av-badge" id="commBadge"></span>
+          <span class="av-sub" id="commSub"></span>
+        </div>
+      </div>
+      <div class="result-hero">
+        <div class="rh-lbl">Tu estilo dominante</div>
+        <div class="rh-style" id="commStyleName"></div>
+        <div class="rh-sub" id="commStyleSub"></div>
+      </div>
+      <div class="card">
+        <div class="step-label"><span class="sl-dot"></span>Tus puntajes (de mayor a menor)</div>
+        <div class="score-bars" id="commBars"></div>
+        <div class="radar-wrap"><canvas id="commRadar" width="280" height="280"></canvas></div>
+      </div>
+      <div class="coach-block" id="commCoach"></div>
+      <div class="part-bridge" id="bridgeCard">
+        <span class="pb-icon">🌉</span>
+        <h3>¿Y cómo manejas los conflictos?</h3>
+        <p>Segunda parte: 30 pares de frases para descubrir tu estilo ante los desacuerdos. ¿Vamos?</p>
+        <button class="btn acc full" onclick="startKilmann()">Iniciar Parte 2 ✦</button>
+        <button class="clearbtn" id="clearCommBtn" style="margin-top:10px">¿Te equivocaste? Borrar y repetir esta parte</button>
+      </div>
+    </div>
+
+    <!-- RESULTADO PARTE 2 -->
+    <div id="kilResultSection" style="display:none">
+      <div class="sect-div"><div class="sd-line"></div><div class="sd-label">Tu manejo de conflictos</div><div class="sd-line"></div></div>
+      <div class="card">
+        <div class="style-avatar">
+          <span class="anim-char" id="kilChar"></span>
+          <span class="av-badge" id="kilBadge"></span>
+          <span class="av-sub" id="kilSub"></span>
+        </div>
+      </div>
+      <div class="result-hero">
+        <div class="rh-lbl">Tu estilo dominante</div>
+        <div class="rh-style" id="kilStyleName"></div>
+        <div class="rh-sub" id="kilStyleSub"></div>
+      </div>
+      <div class="card">
+        <div class="step-label"><span class="sl-dot"></span>Tus puntajes (de mayor a menor)</div>
+        <div class="score-bars" id="kilBars"></div>
+        <div class="radar-wrap"><canvas id="kilRadar" width="280" height="280"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="step-label"><span class="sl-dot"></span>Tu perfil en la grilla de Kilmann</div>
+        <h2>¿Dónde estás y qué puedes ajustar?</h2>
+        <p class="hint" style="margin-top:4px">Las zonas <strong>rígidas</strong> (exceso o carencia) limitan tu flexibilidad. La zona <strong>flexible</strong> es donde más puedes adaptar tu estilo.</p>
+        <div class="kil-grid-wrap" id="kilGrid"></div>
+        <div class="zona-legend">
+          <div class="zona-legend-item"><div class="zona-dot" style="background:#FBE1E5"></div><span style="color:#A9324A">Rígida (exceso)</span></div>
+          <div class="zona-legend-item"><div class="zona-dot" style="background:#E5F4EC"></div><span style="color:var(--green)">Flexible</span></div>
+          <div class="zona-legend-item"><div class="zona-dot" style="background:#F1EEE8"></div><span style="color:var(--muted)">Rígida (carencia)</span></div>
+          <div class="zona-legend-item"><div class="zona-dot" style="background:var(--acc-bg);border:1px solid var(--acc-border)"></div><span style="color:var(--pri)">★ Tu puntaje</span></div>
+        </div>
+      </div>
+      <div class="coach-block" id="kilCoach"></div>
+
+      <div class="sect-div"><div class="sd-line"></div><div class="sd-label">Síntesis · Tu perfil completo</div><div class="sd-line"></div></div>
+      <div class="synth" id="synthBlock"></div>
+      <div id="bonusBlock"></div>
+
+      <div style="margin-top:4px">
+        <button class="btn acc full" id="saveBtn">Guardar mi perfil</button>
+        <div class="save-status" id="saveStatus"></div>
+        <button class="btn pri full" id="pdfBtn" style="margin-top:10px">✦ Descargar mi perfil (PDF)</button>
+        <button class="clearbtn" id="clearKilBtn">¿Te equivocaste? Borrar y repetir solo esta parte</button>
+        <button class="clearbtn" id="clearBtn">Reiniciar el test (borra ambas partes)</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PANEL DEL ORGANIZADOR -->
+<div class="screen" id="scOrg">
+  <div class="top">
+    <div class="eyebrow">🧭 Brújula de Liderazgo · Panel</div>
+    <h1>Resultados del <em>grupo</em></h1>
+    <p id="orgWelcome">Comunicación y manejo de conflictos de las personas que respondieron.</p>
+  </div>
+  <div class="acc-bar"></div>
+  <div class="logout-row">
+    <button class="refresh-btn" id="orgRefreshBtn" onclick="pollOrg()">↻ Actualizar</button>
+    <button class="logout-btn" onclick="doLogout()">Salir</button>
+  </div>
+  <div class="wrap">
+    <div class="card" style="padding:14px 16px">
+      <div class="step-label"><span class="sl-dot"></span>Ver grupo</div>
+      <div class="filter-row" style="margin-top:6px">
+        <select id="groupSel"><option value="__all">Todos los grupos</option></select>
+      </div>
+    </div>
+
+    <div id="orgAlerts"></div>
+
+    <div class="kpi-grid">
+      <div class="kpi-box"><div class="kpi-val" id="kCount">0</div><div class="kpi-lbl">Perfiles completados</div></div>
+      <div class="kpi-box acc"><div class="kpi-val" id="kGroups">0</div><div class="kpi-lbl">Grupos</div></div>
+      <div class="kpi-box"><div class="kpi-val" id="kComm" style="font-size:14px">—</div><div class="kpi-lbl">Comunicación más frecuente</div></div>
+      <div class="kpi-box green"><div class="kpi-val" id="kKil" style="font-size:14px">—</div><div class="kpi-lbl">Conflicto: estilo más frecuente</div></div>
+      <div class="kpi-box"><div class="kpi-val" id="kCombo" style="font-size:12px">—</div><div class="kpi-lbl">Combinación más común</div></div>
+      <div class="kpi-box red"><div class="kpi-val" id="kGap" style="font-size:12px">—</div><div class="kpi-lbl">Estilo con menor presencia</div></div>
+    </div>
+
+    <div class="section-title">Cómo se comunica el grupo</div>
+    <div class="card chart-card">
+      <div class="cc-title">Estilos de comunicación</div>
+      <div class="cc-sub">Último perfil guardado de cada persona</div>
+      <canvas id="orgCommChart" height="210"></canvas>
+    </div>
+
+    <div class="section-title">Cómo maneja los conflictos</div>
+    <div class="card chart-card">
+      <div class="cc-title">Estilos de manejo de conflictos</div>
+      <div class="cc-sub">Modelo Thomas-Kilmann adaptado</div>
+      <canvas id="orgKilChart" height="230"></canvas>
+    </div>
+
+    <div class="section-title">Participantes</div>
+    <div class="card">
+      <div id="orgList"></div>
+      <button class="btn pri full" id="dlAllBtn" style="margin-top:6px">⬇ Descargar todos los perfiles (ZIP de PDFs)</button>
+      <div class="save-status" id="dlStatus"></div>
+    </div>
+
+    <div class="section-title" style="display:none">Invitar a un grupo</div>
+    <div class="card" style="display:none">
+      <p class="hint" style="margin-bottom:8px">Escribe un nombre de grupo y comparte el link. Las respuestas quedarán separadas por grupo en este panel.</p>
+      <input class="field" id="groupName" type="text" placeholder="Ej.: amigos, familia, equipo-ventas" maxlength="30">
+      <div class="link-out"><input id="groupLink" type="text" readonly><button class="btn acc sm" id="copyLinkBtn">Copiar</button></div>
+    </div>
+
+    <div class="section-title">Vista previa</div>
+    <div class="card">
+      <p class="hint" style="margin-bottom:10px">Haz el test tal como lo verá ella, con el bonus incluido. Nada de lo que respondas en la vista previa se guarda.</p>
+      <button class="btn acc full" id="previewBtn">👁 Probar el test (vista previa)</button>
+    </div>
+
+    <div class="live"><span class="pulse"></span>Se actualiza cada 30 s</div>
+  </div>
+</div>
+
+<div class="modal-bg" id="modal">
+  <div class="modal-sheet">
+    <h3 id="modalName"></h3><div style="font-size:12px;color:var(--muted);margin-bottom:12px" id="modalBiz"></div>
+    <div id="modalContent"></div>
+    <button class="btn pri full" style="margin-top:14px" id="modalPdfBtn">⬇ Descargar este perfil (PDF)</button>
+    <button class="btn acc full" style="margin-top:10px" onclick="closeModal()">Cerrar</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ════════════════════════════════════════════════════════════════
+   CONFIGURACIÓN — lo único que necesitas cambiar
+   ════════════════════════════════════════════════════════════════
+   1) En JSONBin crea un bin con este contenido:   {"entries":[]}
+   2) BIN_ID: el ID de ese bin.
+   3) KEY: recomendado usar una ACCESS KEY (JSONBin > API Keys > Access Keys)
+      con permisos solo de "Read" y "Update" de bins. Si en cambio pegas
+      la Master Key, cambia KEY_HEADER a 'X-Master-Key'.
+      Ojo: si el repositorio de GitHub es público, la llave queda visible.
+   Mientras BIN_ID diga REEMPLAZA..., la app funciona en "modo local":
+   guarda solo en este navegador (sirve para probar).                 */
+const CONFIG = {
+  BIN_ID:     'REEMPLAZA_CON_TU_BIN_ID',
+  KEY:        'REEMPLAZA_CON_TU_KEY',
+  KEY_HEADER: 'X-Access-Key',
+  // SHA-256 de la contraseña del organizador (por defecto: brujula2026)
+  ORG_PASS_SHA256: '899ed04223778645fc6b2e89517c4a2c1a64281144207cca87cd915c6b173229',
+  POLL_MS:    30000
+};
+/* Bonus track: tarjeta sorpresa al final del resultado.
+   Solo aparece para el DNI cuyo SHA-256 está en dniSha256 (el DNI no queda escrito en el código).
+   Pon activo:false para quitarla. Vista previa: botón en el panel del organizador. */
+/* Acceso: solo los DNI cuyo SHA-256 esté en esta lista pueden hacer el test.
+   (El DNI no queda escrito en el código.) Déjala vacía [] para abrir el acceso a todos. */
+const ACCESO_DNI_SHA256 = ['a711b7ad5601276460a312eae08500622868c2a9169dc15070a66152f574ca83'];
+const BONUS = { activo:true, dniSha256:'a711b7ad5601276460a312eae08500622868c2a9169dc15070a66152f574ca83', signo:'Géminis' };
+const cloudOk = !!CONFIG.BIN_ID && !CONFIG.BIN_ID.startsWith('REEMPLAZA');
+const API = 'https://api.jsonbin.io/v3/b/' + CONFIG.BIN_ID;
+const LOCAL_DB = 'brujula_db_local';
+const LS_BACKUP = 'brujula_respaldo';
+
+/* ═══ UTILIDADES ═══ */
+const $=id=>document.getElementById(id);
+function esc(str){return String(str==null?'':str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+let tT;function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('on'),3200);}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');window.scrollTo(0,0);}
+function slug(s){return String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,30);}
+function firstName(n){return String(n||'').trim().split(/\s+/)[0]||'';}
+function fmtFecha(ts){if(!ts)return'';const d=new Date(ts);if(isNaN(d))return'';return d.toLocaleDateString('es-PE',{day:'2-digit',month:'short',year:'numeric'})+', '+d.toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit'});}
+const sleepMs=ms=>new Promise(r=>setTimeout(r,ms));
+// SHA-256 en JS puro (funciona sin HTTPS)
+function sha256(str){
+  const ascii=unescape(encodeURIComponent(str));
+  function rr(v,a){return(v>>>a)|(v<<(32-a));}
+  const maxWord=Math.pow(2,32);let result='';const words=[];const bitLen=ascii.length*8;
+  let hash=[],k=[],pc=0;const comp={};
+  for(let c=2;pc<64;c++){if(!comp[c]){for(let i=0;i<313;i+=c)comp[i]=c;hash[pc]=(Math.pow(c,.5)*maxWord)|0;k[pc++]=(Math.pow(c,1/3)*maxWord)|0;}}
+  let s=ascii+'\x80';while(s.length%64-56)s+='\x00';
+  for(let i=0;i<s.length;i++){const j=s.charCodeAt(i);words[i>>2]|=j<<((3-i)%4)*8;}
+  words[words.length]=((bitLen/maxWord)|0);words[words.length]=bitLen;
+  hash=hash.slice(0,8);
+  for(let j=0;j<words.length;){const w=words.slice(j,j+=16);const old=hash;hash=hash.slice(0,8);
+    for(let i=0;i<64;i++){const w15=w[i-15],w2=w[i-2],a=hash[0],e=hash[4];
+      const t1=hash[7]+(rr(e,6)^rr(e,11)^rr(e,25))+((e&hash[5])^((~e)&hash[6]))+k[i]+(w[i]=(i<16)?w[i]:(w[i-16]+(rr(w15,7)^rr(w15,18)^(w15>>>3))+w[i-7]+(rr(w2,17)^rr(w2,19)^(w2>>>10)))|0);
+      const t2=(rr(a,2)^rr(a,13)^rr(a,22))+((a&hash[1])^(a&hash[2])^(hash[1]&hash[2]));
+      hash=[(t1+t2)|0].concat(hash);hash[4]=(hash[4]+t1)|0;}
+    for(let i=0;i<8;i++)hash[i]=(hash[i]+old[i])|0;}
+  for(let i=0;i<8;i++)for(let j=3;j+1;j--){const b=(hash[i]>>(j*8))&255;result+=((b<16)?'0':'')+b.toString(16);}
+  return result;
+}
+
+/* ═══ GRUPO (por link: ?grupo=amigos) ═══ */
+const GROUP=(()=>{try{const g=new URLSearchParams(location.search).get('grupo');return slug(g)||'general';}catch(e){return'general';}})();
+if(GROUP!=='general'){$('groupBadge').style.display='inline-flex';$('groupBadge').textContent='👥 Grupo: '+GROUP;}
+
+/* ═══ ESTILOS ═══ */
+const COMM_AVATARS={
+  DI:{char:'🦁',label:'⚡ Directo',sub:'Decisión rápida · Va al punto · Foco en resultados'},
+  VI:{char:'🔥',label:'🔥 Vigoroso',sub:'Energía que contagia · Inspira · Foco en la visión'},
+  CO:{char:'🌻',label:'🤝 Considerado',sub:'Escucha de verdad · Conecta · Foco en las personas'},
+  SI:{char:'🦉',label:'📊 Sistemático',sub:'Analiza antes de hablar · Método · Foco en los datos'}
+};
+const KIL_AVATARS={
+  COM:{char:'⚔️',label:'⚔️ Competitivo',sub:'Firmeza · Asertividad · Defiende sus metas'},
+  COL:{char:'🌉',label:'🤝 Colaborativo',sub:'Integra · Crea · Busca que todos ganen'},
+  NEG:{char:'⚖️',label:'⚖️ Negociador',sub:'Pragmatismo · Agilidad · Encuentra el punto medio'},
+  EV:{char:'🌊',label:'🚪 Evitativo',sub:'Cautela · Reflexión · Espera el momento'},
+  CED:{char:'🕊️',label:'🕊️ Adaptativo',sub:'Generosidad · Armonía · Prioriza la relación'}
+};
+const COMM_PROFILES={
+  DI:{name:'Directo',sub:'Foco en resultados · Va al grano · Decisión rápida',
+    desc:n=>`${n}, vas al punto. Decides rápido y no le das vueltas a las cosas, y eso hace que quienes trabajan o conviven contigo sepan exactamente qué esperas. Cuando todo se mueve rápido, eso es un superpoder.`,
+    str:n=>[`${n}, comunicas con una claridad poco común.`,'Bajo presión decides rápido, y eso da tranquilidad a los demás.','Sueles ser quien primero ve qué hay que hacer, y lo dices.'],
+    watch:n=>[`${n}, cuando hay estrés puedes sonar más cortante de lo que quieres.`,'Algunas personas pueden sentir que no hay espacio para preguntar, aunque sí quieras escuchar.'],
+    tip:n=>`${n}, esta semana prueba cerrar cada pedido con: "¿Te queda claro o te lo explico mejor?". Son cinco segundos que cambian el clima de la conversación.`},
+  VI:{name:'Vigoroso',sub:'Foco en la visión · Entusiasmo · Inspiración',
+    desc:n=>`${n}, tienes una energía que contagia. Cuando hablas de algo que te importa, la gente quiere sumarse. Inspiras de forma natural y sabes mantener el entusiasmo por lo que viene.`,
+    str:n=>[`${n}, generas entusiasmo y compromiso casi sin darte cuenta.`,'Lo que dices se recuerda: tu forma de comunicar deja huella.','Tienes una visión clara que arrastra a otros con ella.'],
+    watch:n=>[`${n}, el entusiasmo a veces lleva a prometer más de lo que se puede cumplir hoy.`,'Si cambias de idea seguido, los demás pueden perderse: necesitan anclas concretas.'],
+    tip:n=>`${n}, por cada idea nueva que compartas, añade una fecha y quién se encarga. Así tu visión se convierte en un plan que otros pueden seguir.`},
+  CO:{name:'Considerado',sub:'Foco en las personas · Empatía · Conexión',
+    desc:n=>`${n}, escuchas de verdad. Las personas se sienten vistas cuando hablan contigo, y eso genera una confianza que no se compra. Es de lo más valioso que aportas a cualquier grupo.`,
+    str:n=>[`${n}, generas una lealtad profunda en quienes te rodean.`,'Calmas tensiones antes de que se vuelvan problemas grandes.','La gente vuelve a ti porque la conexión que creas es real.'],
+    watch:n=>[`${n}, a veces postergas conversaciones difíciles para no herir a nadie, y eso acumula tensión.`,'Puedes terminar cargando con los problemas de todos: recuerda que también te toca cuidarte.'],
+    tip:n=>`${n}, identifica una conversación que hayas postergado y ponle fecha esta semana. La claridad dicha con cariño fortalece más que el silencio protector.`},
+  SI:{name:'Sistemático',sub:'Foco en los datos · Análisis · Método',
+    desc:n=>`${n}, antes de hablar ya procesaste la información. Quienes te rodean confían en que lo que dices tiene respaldo. Te buscan cuando hace falta certeza en medio de la incertidumbre.`,
+    str:n=>[`${n}, lo que dices tiene credibilidad: se nota que lo pensaste bien.`,'Comunicas con precisión, y eso reduce errores y malentendidos.','Cuando explicas algo, la gente lo entiende.'],
+    watch:n=>[`${n}, a veces el análisis toma más tiempo del necesario y la decisión se retrasa.`,'Hay momentos en que los demás necesitan más calidez y menos datos para sentirse cerca.'],
+    tip:n=>`${n}, esta semana, en una conversación importante, cuenta primero cómo te sientes con el tema y después da los datos. La emoción abre la puerta; el dato la sostiene.`}
+};
+const KIL_PROFILES={
+  COM:{name:'Competitivo',sub:'Firmeza en tus metas · Asertividad · Decisión clara',
+    desc:n=>`${n}, cuando hay un conflicto vas de frente. No te pierdes en rodeos, y en situaciones urgentes o cuando hay un límite que no se puede mover, eso es justo lo que se necesita.`,
+    str:n=>[`${n}, eres eficaz cuando hay que poner límites o resolver urgencias.`,'Los demás saben dónde están los límites, y eso da seguridad.','No dejas que los problemas se arrastren sin resolverse.'],
+    watch:n=>[`${n}, si lo usas en exceso, algunas personas pueden sentir distancia o tensión.`,'Puedes ganar la discusión y perder a la persona: eso se acumula.'],
+    tip:n=>`${n}, antes de plantarte en una posición, pregúntate: ¿es un límite real o simplemente no quiero ceder hoy? Si es lo segundo, prueba negociar.`,
+    when:n=>`${n}, úsalo cuando alguien no cumple lo acordado, cuando está en juego algo que no es negociable (seguridad, ética, calidad) o cuando hay que decidir rápido y no hay espacio para debatir.`},
+  COL:{name:'Colaborativo',sub:'Que todos ganen · Integración · Creatividad',
+    desc:n=>`${n}, ante un conflicto tu primer instinto es buscar una solución donde todos salgan bien. Eso pide tiempo y energía, pero las relaciones que construye duran mucho más.`,
+    str:n=>[`${n}, encuentras soluciones más creativas porque escuchas a todas las partes.`,'La gente se compromete más con lo que se decidió en conjunto.','Construyes confianza profunda con las personas cercanas.'],
+    watch:n=>[`${n}, colaborar toma tiempo y no siempre es la herramienta correcta en una emergencia.`,'A veces la otra parte no llega con la misma disposición, y eso puede frustrarte.'],
+    tip:n=>`${n}, piensa en alguien con quien tengas una tensión recurrente y propón 15 minutos con una pregunta: "¿Qué necesitarías para que esto funcione mejor para ti?".`,
+    when:n=>`${n}, úsalo con personas de confianza, en decisiones que afectan a todos o cuando la solución tiene que sostenerse en el tiempo.`},
+  NEG:{name:'Negociador',sub:'Punto medio · Pragmatismo · Agilidad',
+    desc:n=>`${n}, no te aferras a una posición. Buscas el arreglo práctico que haga avanzar las cosas, y cuando todo se mueve rápido, esa flexibilidad vale mucho.`,
+    str:n=>[`${n}, resuelves conflictos rápido y sin dramas.`,'Cuidas la relación mientras defiendes lo que importa.','Encuentras salidas cuando nadie más las ve.'],
+    watch:n=>[`${n}, a veces el punto medio no es la mejor solución, solo la más cómoda.`,'Cuida que no parezca que no tienes una posición clara.'],
+    tip:n=>`${n}, la próxima vez que negocies algo, define antes tu "mínimo aceptable". Así sabrás cuándo vale la pena ceder y cuándo sostenerte.`,
+    when:n=>`${n}, úsalo cuando ambas partes tienen algo de razón, cuando el tiempo apremia o cuando cuidar la relación importa tanto como el resultado.`},
+  EV:{name:'Evitativo',sub:'El momento adecuado · Cautela · Reflexión',
+    desc:n=>`${n}, antes de actuar, observas. Sabes que no todo conflicto merece tu energía ahora mismo, y eso puede ser sabiduría. La clave está en distinguir cuándo esperar ayuda y cuándo solo posterga.`,
+    str:n=>[`${n}, evitas escaladas innecesarias que desgastan a todos.`,'Das tiempo a que las emociones se calmen antes de hablar.','Guardas tu energía para los conflictos que de verdad importan.'],
+    watch:n=>[`${n}, los problemas que se evitan no desaparecen: suelen volver más grandes.`,'Tu silencio puede leerse como desinterés o falta de decisión.'],
+    tip:n=>`${n}, esta semana elige UN conflicto que vengas postergando y ponle fecha. No tienes que resolverlo hoy, solo comprometerte a cuándo lo harás.`,
+    when:n=>`${n}, úsalo cuando el momento no es el adecuado (emociones a flor de piel, poca información), no cuando el tema simplemente te incomoda.`},
+  CED:{name:'Adaptativo',sub:'Prioriza la relación · Generosidad · Armonía',
+    desc:n=>`${n}, sabes cuándo la relación vale más que tener la razón. Ceder de forma estratégica es una fortaleza real, siempre que sea una elección consciente y no un hábito automático.`,
+    str:n=>[`${n}, preservas relaciones importantes incluso en momentos de tensión.`,'Generas buena voluntad, y eso se devuelve con el tiempo.','Cediendo en lo pequeño, abres espacio para lo que de verdad importa.'],
+    watch:n=>[`${n}, si cedes siempre, algunas personas aprenden que basta con presionarte.`,'Ceder en lo que sí te importa genera resentimiento, aunque no lo notes en el momento.'],
+    tip:n=>`${n}, antes de ceder, pregúntate: ¿lo hago por estrategia (para cuidar algo más importante) o por incomodidad (para evitar el conflicto)? Solo lo primero suma.`,
+    when:n=>`${n}, úsalo cuando la relación vale más que el resultado puntual o cuando el tema realmente no es vital para ti.`}
+};
+
+/* ═══ PREGUNTAS (instrumentos originales, redacción neutra) ═══ */
+const COMM_Q=[{q:"Cuando estoy en una reunión prefiero sentarme…",o:["En la cabecera de la mesa.","Donde las personas me puedan ver.","Al lado de otra persona.","Dejando por lo menos un lugar vacío entre la otra persona y yo."],m:['DI','VI','CO','SI']},{q:"Cuando hablo con una persona…",o:["Muchas veces miro hacia abajo.","La miro directamente todo el tiempo.","La miro con frecuencia.","Tiendo a mirar alrededor en vez de a la persona."],m:['CO','DI','VI','SI']},{q:"Cuando saludo a personas que conozco relativamente bien…",o:["Les digo hola, pero no las toco.","Les doy la mano con firmeza.","Les doy un abrazo.","Les doy la mano con entusiasmo."],m:['SI','DI','CO','VI']},{q:"Cuando estoy hablando con otras personas…",o:["Me gusta quedarme de pie cerca de ellas.","No me siento a gusto si se paran demasiado cerca.","Me molesta cuando se quedan demasiado cerca.","No me importa si están cerca."],m:['VI','SI','DI','CO']},{q:"Yo camino…",o:["A paso lento, como si estuviera paseando.","A paso animado.","A paso parejo.","De prisa."],m:['CO','VI','SI','DI']},{q:"Cuando los demás hablan…",o:["Trato de encontrar el punto principal.","Trato de encontrar una buena historia.","Trato de encontrar hechos que lo respalden.","Trato de identificar sus sentimientos."],m:['DI','VI','SI','CO']},{q:"Cuando hablo en público…",o:["Uso diferentes tonos de voz para causar mejor efecto.","Hablo con voz clara, pero no fuerte.","Hablo con voz relativamente baja.","Hablo en voz alta."],m:['VI','SI','CO','DI']},{q:"Cuando veo algún conflicto…",o:["Trato de calmar las cosas, enfocándome en lo positivo.","Lo evito.","Me meto de lleno.","Trato de entender qué lo provocó."],m:['CO','SI','DI','VI']},{q:"Cuando alguien llega al lugar donde estoy trabajando…",o:["Le pregunto si le gustaría sentarse.","Le digo que se siente.","Dejo que decida si quiere sentarse y dónde.","Le ofrezco una silla."],m:['CO','DI','SI','VI']},{q:"Cuando participo en resolver un problema…",o:["Dirijo la discusión.","Escucho lo que dicen los demás.","Me enfoco en el problema general.","Me enfoco en los hechos."],m:['DI','CO','VI','SI']},{q:"Normalmente empiezo las conversaciones…",o:["Preguntando a la otra persona cómo le va ese día.","Contando una historia.","Entrando de inmediato en el tema.","Estableciendo el propósito de la conversación."],m:['CO','VI','DI','SI']},{q:"Cuando tomo una decisión…",o:["Me fijo en cómo afectará a otras personas.","Confío en mi propio criterio.","Busco que los demás aprueben mi decisión.","Me apoyo en métodos sólidos para decidir."],m:['CO','DI','VI','SI']},{q:"Cuando alguien está haciendo una presentación…",o:["Necesito que sea entretenida.","Me imagino cómo se debe estar sintiendo esa persona.","Trato de evaluar la lógica de la presentación.","Me impaciento si es lenta."],m:['VI','CO','SI','DI']},{q:"Cuando una persona conocida me toca (por ejemplo, me pone la mano en el brazo)…",o:["Me gusta.","Me irrita.","Me hace sentir más cerca de esa persona.","Me incomoda."],m:['VI','DI','CO','SI']},{q:"Cuando intento conseguir lo que quiero…",o:["Exploro los deseos y necesidades de los demás.","Defiendo mi postura con vehemencia.","Soy muy convincente.","Transmito calma y competencia."],m:['CO','DI','VI','SI']},{q:"Respecto a lo que los demás piensan de mí…",o:["Controlo lo que quiero que sepan.","Les hago saber cómo me siento.","Soy una persona reservada.","Soy como un libro abierto."],m:['DI','VI','SI','CO']},{q:"En una reunión de equipo…",o:["Tiendo a evaluar las ideas.","Mantengo a todos involucrados.","Tiendo a hacerme cargo de la conversación.","Presto atención a lo que quiere la gente."],m:['SI','CO','DI','VI']},{q:"Para mí, expresar sentimientos personales en público…",o:["Hace que las cosas sean más interesantes.","Incomoda un poco a las personas.","Me ayuda a relacionarme con los demás.","Interfiere con el trabajo."],m:['VI','SI','CO','DI']},{q:"En una reunión de trabajo, mi propósito es…",o:["Que se entienda mi intención.","Establecer una relación con los demás.","Persuadir a los demás.","Investigar la situación."],m:['DI','CO','VI','SI']},{q:"Cuando cuento una historia…",o:["Me enfoco en lo que viven los personajes.","Mantengo a la gente en suspenso.","Armo el caso paso a paso.","Voy directo al punto."],m:['CO','VI','SI','DI']},{q:"Respecto al trabajo en equipo…",o:["Apoyo al equipo.","Prefiero asumir la responsabilidad antes que depender del equipo.","Me impaciento con facilidad.","Reúno al equipo."],m:['CO','DI','SI','VI']},{q:"Cuando hago una presentación…",o:["Es bien organizada.","Exploro las emociones de las personas.","Es contundente.","Es entretenida."],m:['SI','CO','DI','VI']},{q:"Cuando alguien se molesta o llora frente a mí…",o:["Prefiero tratar de que deje de hacerlo.","Trato de ayudar.","Trato de levantarle el ánimo.","Busco una forma de salir de la situación."],m:['DI','CO','VI','SI']},{q:"Mis llamadas telefónicas…",o:["Son lo más breves posible.","Se enfocan solo en el asunto pendiente.","Son divertidas.","Tienden a ser largas."],m:['SI','DI','VI','CO']}];
+
+const KIL_Q=[{o:["Hay veces en que dejo que otros asuman la responsabilidad de resolver un problema.","Antes de negociar en lo que discrepamos, trato de afirmar aquello en lo que estamos de acuerdo."],m:['EV','COL']},{o:["Trato de hallar una solución de mutuo acuerdo.","Intento que atendamos todas sus inquietudes y las mías."],m:['NEG','COL']},{o:["Generalmente soy firme persiguiendo mis metas.","Trato de calmar los ánimos de la otra persona y mantener nuestra relación."],m:['COM','CED']},{o:["Trato de encontrar una solución de mutuo acuerdo.","Algunas veces sacrifico mis propios deseos por los de la otra persona."],m:['NEG','CED']},{o:["Busco constantemente la ayuda de otros para encontrar una solución.","Hago todo lo necesario para evitar tensiones inútiles."],m:['COL','EV']},{o:["Trato de evitarme disgustos.","Trato de lograr lo que quiero."],m:['EV','COM']},{o:["Trato de posponer el asunto hasta tener tiempo de pensarlo.","Cedo en algunos puntos para lograr otros."],m:['EV','NEG']},{o:["Generalmente soy firme persiguiendo mis metas.","Trato de encontrar una solución de mutuo acuerdo."],m:['COM','NEG']},{o:["Pienso que no siempre vale la pena preocuparse por las diferencias.","Trato de encontrar una solución de mutuo acuerdo."],m:['EV','NEG']},{o:["Soy firme persiguiendo mis metas.","Trato de encontrar una solución de mutuo acuerdo."],m:['COM','COL']},{o:["Intento poner las inquietudes y los temas sobre la mesa de inmediato.","Trato de calmar los ánimos de la otra persona y mantener nuestra relación."],m:['COL','CED']},{o:["Algunas veces evito tomar posiciones que puedan generar controversia.","Dejo que la otra persona mantenga algunas de sus posiciones si me deja mantener algunas mías."],m:['EV','NEG']},{o:["Propongo un punto medio.","Presiono para dejar claros mis puntos."],m:['NEG','COM']},{o:["Le cuento mis ideas y le pido las suyas.","Trato de mostrarle la lógica y los beneficios de mi posición."],m:['COL','COM']},{o:["Trato de calmar los ánimos de la otra persona y mantener nuestra relación.","Hago todo lo necesario para evitar tensiones."],m:['CED','EV']},{o:["Trato de no herir los sentimientos de la otra persona.","Trato de convencer a la otra persona de los méritos de mi posición."],m:['CED','COM']},{o:["Generalmente soy firme persiguiendo mis metas.","Hago lo necesario para evitar tensiones inútiles."],m:['COM','EV']},{o:["Puedo dejar que mantenga sus puntos de vista, si eso le hace feliz.","Dejo que la otra persona mantenga algunas de sus posiciones si me deja mantener algunas de las mías."],m:['CED','NEG']},{o:["Intento poner las inquietudes y los temas sobre la mesa de inmediato.","Trato de posponer el asunto hasta tener tiempo de pensarlo."],m:['COL','EV']},{o:["Intento resolver nuestras diferencias de inmediato.","Trato de hallar una combinación justa de ganancias y pérdidas para ambas partes."],m:['COL','NEG']},{o:["Al negociar, trato de considerar los deseos de la otra persona.","Siempre me inclino por discutir el problema de forma directa."],m:['CED','COM']},{o:["Trato de hallar una posición intermedia entre la suya y la mía.","Defiendo lo que quiero."],m:['NEG','COM']},{o:["Con mucha frecuencia me preocupo por satisfacer los deseos de ambas partes.","Hay veces en que dejo que otros asuman la responsabilidad de resolver un problema."],m:['COL','EV']},{o:["Si la posición de la otra persona le parece muy importante, trato de cumplir sus deseos.","Trato de que la otra persona acepte un arreglo."],m:['CED','NEG']},{o:["Trato de mostrarle la lógica y los beneficios de mi posición.","Al negociar, trato de considerar los deseos de la otra persona."],m:['COM','CED']},{o:["Propongo un punto medio.","Casi siempre me preocupo por satisfacer los deseos de ambas partes."],m:['NEG','COL']},{o:["Algunas veces evito tomar posiciones que puedan generar controversia.","Si eso hace feliz a la otra persona, puedo dejar que mantenga sus puntos de vista."],m:['EV','CED']},{o:["Generalmente soy firme persiguiendo mis metas.","Generalmente busco la ayuda de otra persona para encontrar una solución."],m:['COM','COL']},{o:["Propongo un punto medio.","Siento que no siempre vale la pena preocuparse por las diferencias."],m:['NEG','EV']},{o:["Trato de no herir los sentimientos de la otra persona.","Siempre comparto el problema con la otra persona para que podamos resolverlo."],m:['CED','COL']}];
+
+/* ═══ SÍNTESIS ═══ */
+function getSynthesis(cs,ks,name){
+  const fn=firstName(name);
+  const cp=COMM_PROFILES[cs],kp=KIL_PROFILES[ks];
+  const C={
+    'DI+COM':{body:`${fn}, dices las cosas claras y, cuando hay que defender algo, lo defiendes. Esa combinación te hace muy eficaz en momentos de crisis: nadie tiene dudas de qué esperar de ti. Tu reto: recordar que las personas también necesitan espacio para equivocarse y aprender contigo.`,super:`Resuelves cuando nadie más sabe cómo, y lo comunicas con una claridad que da estabilidad a todo el grupo.`,tips:[`${fn}, esta semana cierra cada indicación con "¿Te queda claro o te explico mejor?". Son cinco segundos que cambian el clima.`,`Y también: antes de plantarte en una posición, pregúntate si es un límite real o si solo no quieres ceder hoy.`]},
+    'DI+COL':{body:`${fn}, combinas la claridad de quien sabe lo que quiere con la generosidad de quien busca que todos ganen. No es común: la mayoría elige una de las dos. Tu reto es que colaborar pide tiempo y tú prefieres la velocidad. Elige conscientemente cuándo usar cada modo.`,super:`Puedes dirigir y construir equipo al mismo tiempo, sin sacrificar ninguna de las dos cosas.`,tips:[`${fn}, esta semana, cuando des una indicación, agrega "¿Te queda claro?" antes de seguir.`,`Y también: busca un momento en que puedas colaborar en vez de decidir por tu cuenta, y fíjate qué cambia.`]},
+    'DI+NEG':{body:`${fn}, vas al grano y sabes cerrar acuerdos rápido. Esa agilidad vale mucho en el día a día. Tu reto: asegurarte de que el punto medio que alcanzas sea la mejor solución y no solo la más cómoda para terminar pronto.`,super:`Resuelves conflictos sin dramas y con la claridad suficiente para que todos entiendan el resultado.`,tips:[`${fn}, esta semana define tu "mínimo aceptable" antes de cualquier negociación.`,`Y también: cierra tus indicaciones con "¿Te queda claro?" para abrir espacio a que los demás hablen.`]},
+    'DI+EV':{body:`${fn}, comunicas con mucha claridad, pero cuando aparece un conflicto prefieres esperar. Esa mezcla puede confundir: la gente escucha mensajes directos, pero no sabe qué pasará cuando algo sale mal. Llevar esa misma claridad a las conversaciones difíciles es tu siguiente nivel.`,super:`Ya tienes toda la claridad que hace falta para resolver conflictos; solo falta usarla también cuando el tema incomoda.`,tips:[`${fn}, esta semana elige un conflicto postergado y ponle fecha. No tienes que resolverlo hoy, solo comprometerte a cuándo.`,`Y también: cierra tus indicaciones con "¿Te queda claro?" para abrir el diálogo.`]},
+    'DI+CED':{body:`${fn}, al comunicar vas directo al punto y, al resolver diferencias, sabes ceder: generas claridad sin crear enemigos. El reto está en distinguir cuándo cedes por estrategia y cuándo para evitar el conflicto. Tener claro qué es innegociable para ti consolidará tu liderazgo.`,super:`Generas claridad sin crear enemigos, y eso construye un ambiente donde la gente confía en ti y en las reglas del juego.`,tips:[`${fn}, esta semana, antes de ceder en algo, pregúntate: "¿Cedo por estrategia o por incomodidad?". Solo lo primero suma.`,`Y también: identifica algo innegociable para ti y defiéndelo con la misma claridad con que das indicaciones.`]},
+    'VI+COM':{body:`${fn}, inspiras con tu visión y, cuando hay que poner un límite, lo pones. Eso construye grupos que se entusiasman con el rumbo y además respetan los acuerdos. Tu reto: entusiasmo y firmeza pueden chocar si no se comunican con cuidado. Que los demás sepan cuándo estás en modo "visión" y cuándo en modo "límite".`,super:`Mueves a la gente con tu visión y la mantienes alineada con límites claros: un liderazgo realmente completo.`,tips:[`${fn}, esta semana, por cada idea nueva que compartas, añade una fecha y quién se encarga. Tu visión necesita anclas concretas.`,`Y también: antes de poner un límite firme, pregúntate si es real o si puedes negociar. Te ahorrará desgaste.`]},
+    'VI+COL':{body:`${fn}, inspiras y escuchas a la vez, y esa combinación crea grupos que duran: la gente no solo se entusiasma con la visión, también se siente parte de construirla. Tu reto: colaborar pide tiempo y tu energía quiere avanzar rápido. Protege los espacios de colaboración sin perder el impulso.`,super:`Creas sentido de equipo casi sin darte cuenta, y eso vale más que cualquier método o sistema.`,tips:[`${fn}, esta semana, por cada idea nueva, añade una fecha y quién se encarga. Así tu visión se vuelve plan.`,`Y también: pregunta a tu grupo cómo mejorar algo y escucha antes de proponer.`]},
+    'VI+NEG':{body:`${fn}, tu energía abre puertas y tu pragmatismo las mantiene abiertas. Eres muy eficaz para mover proyectos y cerrar acuerdos sin que se vuelvan batallas. Tu reto: el entusiasmo puede llevarte a aceptar condiciones que no te convienen solo por cerrar rápido. Define tu piso antes de negociar.`,super:`Haces que una negociación se sienta como una oportunidad, y eso cambia por completo la dinámica.`,tips:[`${fn}, esta semana define tu "mínimo aceptable" antes de cualquier negociación importante.`,`Y también: por cada idea nueva, añade una fecha y quién se encarga.`]},
+    'VI+EV':{body:`${fn}, tienes la energía de quien lidera, pero cuando surge un conflicto prefieres esperar. Eso puede abrir una brecha: los demás ven entusiasmo, pero no saben cómo reaccionarás cuando algo sale mal. Usar esa misma energía para abordar los conflictos con optimismo es tu próximo salto.`,super:`Tienes la energía para convertir un conflicto en una conversación constructiva; solo falta que elijas hacerlo.`,tips:[`${fn}, esta semana aborda un conflicto postergado con la misma energía con que compartes una idea: "¿Cómo lo resolvemos?" en lugar de esperar.`,`Y también: por cada idea nueva, añade una fecha y quién se encarga. Le da estructura a tu entusiasmo.`]},
+    'VI+CED':{body:`${fn}, inspiras con tu visión y cuidas las relaciones con generosidad: creas ambientes donde la gente quiere estar. Tu reto: tanta flexibilidad puede hacer que algunos no tomen en serio tus límites. La misma energía con que inspiras puede servirte para defender lo que importa.`,super:`La gente te sigue porque quiere, no porque tiene que. Ese es el tipo de liderazgo más poderoso.`,tips:[`${fn}, esta semana identifica algo innegociable para ti y defiéndelo con la misma energía con que compartes tus ideas.`,`Y también: por cada idea nueva, añade una fecha y quién se encarga.`]},
+    'CO+COM':{body:`${fn}, cuidas mucho a las personas y, cuando hay que poner un límite, lo pones. Esa mezcla genera confianza y respeto a la vez, que es justo lo más difícil de lograr. Tu reto: tu firmeza puede sorprender a quienes te conocen por tu calidez. Que sepan que ambas cosas conviven en ti.`,super:`Puedes dar una crítica difícil sin romper la relación, una habilidad que muy pocas personas tienen.`,tips:[`${fn}, esta semana identifica una conversación postergada y ponle fecha. La claridad con cariño fortalece más que el silencio.`,`Y también: antes de plantarte en una posición, pregúntate si es un límite real o si puedes negociar.`]},
+    'CO+COL':{body:`${fn}, tienes empatía natural y buscas que todos ganen: conviertes cualquier tensión en una oportunidad de construir algo mejor en conjunto. Tu reto: cuidar y colaborar consumen energía, y tienes límites. Aprender a ponerlos con la misma calidez con que cuidas es tu siguiente nivel.`,super:`La gente confía en ti para resolver lo que parece imposible, y eso es un activo enorme en cualquier grupo.`,tips:[`${fn}, esta semana agenda una conversación difícil que hayas postergado. La claridad amable siempre pesa más que el silencio.`,`Y también: con alguien con quien haya tensión, prueba 15 minutos con la pregunta: "¿Qué necesitarías para que esto funcione mejor?".`]},
+    'CO+NEG':{body:`${fn}, escuchas de verdad y sabes encontrar el punto medio: eso te convierte en un puente natural. Te buscan cuando hay tensión porque saben que llegarás a un acuerdo que cuide a todos. Tu reto: asegurarte de que ese punto medio sea el correcto y no solo el más cómodo.`,super:`Mantienes el buen clima incluso en los momentos más difíciles, y eso vale más que cualquier procedimiento.`,tips:[`${fn}, esta semana, antes de negociar algo, define tu "mínimo aceptable". Sabrás cuándo ceder y cuándo sostenerte.`,`Y también: agenda una conversación difícil que hayas postergado. La claridad amable es mejor que el silencio.`]},
+    'CO+EV':{body:`${fn}, cuidas mucho tus relaciones, y evitar el conflicto es tu forma de protegerlas. Pero lo que más fortalece una relación, a veces, es decir la verdad a tiempo. Una conversación difícil hecha con cariño fortalece más que el silencio protector. Ese es el paso que te lleva al siguiente nivel.`,super:`Tienes toda la calidez para que una conversación difícil se sienta segura; solo falta elegir tenerla.`,tips:[`${fn}, esta semana aborda un conflicto postergado con: "¿Cómo podemos mejorar esto?". Tu calidez es tu mayor ventaja.`,`Y también: piensa en alguien a quien no le hayas dado una opinión clara últimamente y dásela esta semana, con cariño.`]},
+    'CO+CED':{body:`${fn}, priorizas a las personas y la armonía, y eso crea ambientes donde la gente se siente segura. Tu reto: cuidarte también a ti. Ceder siempre tiene un costo interno que se acumula. La lealtad que generas merece que también hables con honestidad de lo que necesitas.`,super:`La lealtad que generas es casi imposible de comprar, porque es real y se construye día a día.`,tips:[`${fn}, esta semana, antes de ceder en algo, pregúntate: ¿cedo por estrategia o por incomodidad? Solo lo primero suma.`,`Y también: agenda una conversación difícil que hayas postergado. Tu calidez basta para sostenerla.`]},
+    'SI+COM':{body:`${fn}, piensas antes de hablar y, cuando pones un límite, lo haces con argumentos sólidos. Eso te da una credibilidad enorme: cuando dices algo, te creen. Tu reto: la firmeza sin calidez puede percibirse como frialdad. Un toque de humanidad multiplica el impacto de tu rigor.`,super:`Cuando la situación es compleja, tu forma de liderar es la que el grupo necesita: comunicas con una precisión que da certeza.`,tips:[`${fn}, esta semana cuenta cómo te sientes con un tema antes de dar los datos. La emoción abre la puerta; el dato la sostiene.`,`Y también: antes de plantarte en una posición, pregúntate si es un límite real o si puedes negociar.`]},
+    'SI+COL':{body:`${fn}, analizas bien y buscas que todos ganen: un liderazgo de mucha calidad. Tu reto: colaborar exige soltar el control del proceso, algo difícil cuando tienes una forma precisa de hacer las cosas. Confiar en el proceso colectivo es tu siguiente nivel.`,super:`Cuando dices que algo funcionará, te creen, y esa confianza permite que la colaboración funcione de verdad.`,tips:[`${fn}, esta semana busca un momento para confiar en el proceso del grupo sin intervenir, y observa qué pasa.`,`Y también: cuenta primero cómo te sientes con un tema y luego da los datos.`]},
+    'SI+NEG':{body:`${fn}, tienes los datos y sabes llegar a acuerdos prácticos: negocias con mucha eficacia, porque tus acuerdos son sólidos y la gente confía en ellos. Tu reto: no perderte en el análisis cuando la situación pide decidir rápido.`,super:`Tus acuerdos tienen peso porque están bien pensados, y eso construye confianza a largo plazo.`,tips:[`${fn}, esta semana define tu "mínimo aceptable" antes de cualquier negociación importante.`,`Y también: cuenta primero cómo te sientes antes de dar los datos. Cambia la calidad de la conversación.`]},
+    'SI+EV':{body:`${fn}, procesas mucho antes de actuar, tanto al comunicar como al manejar conflictos. Puede ser sabiduría, pero también puede pasar que el análisis se vuelva una razón para no hacer lo que ya sabes que hay que hacer. Confiar más en tu propio análisis para dar el paso es tu mayor oportunidad.`,super:`Cuando actúas, lo haces con fundamento, y eso da certeza a quienes te rodean. Lo que falta es elegir actuar más seguido.`,tips:[`${fn}, esta semana elige UN conflicto postergado y ponle fecha. Ya tienes el análisis: solo falta el paso.`,`Y también: cuenta primero cómo te sientes con un tema y luego da los datos. Conecta antes con las personas que con los números.`]},
+    'SI+CED':{body:`${fn}, combinas método y generosidad, y eso crea ambientes estables y confiables. Tu reto: cuando hablas, la gente escucha porque sabe que lo pensaste bien. Asegúrate de que esa voz también se oiga cuando toca defender una posición.`,super:`Cuando hablas, te escuchan, porque saben que lo pensaste bien. Usa ese poder más seguido, sobre todo cuando importa.`,tips:[`${fn}, esta semana identifica algo innegociable para ti y defiéndelo. Tu análisis es tu mejor argumento.`,`Y también: antes de ceder, pregúntate: ¿cedo por estrategia o por incomodidad? Solo lo primero suma.`]}
+  };
+  const combo=C[cs+'+'+ks]||{
+    body:`${fn}, tu combinación de <strong>${cp.name}</strong> al comunicarte y <strong>${kp.name}</strong> al manejar conflictos te da un perfil de liderazgo propio. Úsalos juntos: tu comunicación para conectar y tu estilo de conflicto para resolver.`,
+    super:`Tu perfil combina lo mejor de ambos estilos: úsalos conscientemente esta semana y verás la diferencia.`,
+    tips:[cp.tip(fn),'Y también: '+kp.tip(fn)]
+  };
+  return {body:combo.body,superpower:combo.super,tips:combo.tips};
+}
+
+/* ═══ BONUS TRACK ═══ */
+function bonusAplica(uid){
+  if(!BONUS.activo)return false;
+  if(previewMode)return true;
+  return !!uid&&sha256(String(uid))===BONUS.dniSha256;
+}
+function bonusHtml(cs,ks,name){
+  const fn=esc(firstName(name)),G=esc(BONUS.signo);
+  const C={
+    DI:`Tú vas directo al punto; un ${G} da mil vueltas antes de llegar… pero siempre llega con una idea que no esperabas. <strong>Tú le das rumbo, ${G} le pone chispa.</strong>`,
+    VI:`Tu energía más la curiosidad de un ${G} dan conversaciones que empiezan con "una cosa rápida" y terminan dos horas después. <strong>Nadie mira el reloj.</strong>`,
+    CO:`Tú escuchas de verdad, y a un ${G} le encanta conversar. Combinación peligrosa: <strong>nadie se quiere despedir primero.</strong>`,
+    SI:`Tú traes los datos; un ${G} trae las preguntas que nadie se hizo. Juntos arman <strong>la conversación más interesante de la mesa.</strong>`
+  };
+  const K={
+    COM:`Y si discuten, tú defiendes tu punto con firmeza… y ${G} te da la razón, para luego convencerte de lo contrario con una sonrisa.`,
+    COL:`En los desacuerdos, tú buscas que ambos ganen y ${G} siempre tiene una tercera opción. Spoiler: suele funcionar.`,
+    NEG:`En los desacuerdos se encuentran rápido en el punto medio, casi siempre frente a un café.`,
+    EV:`Cuando hay tensión, tú prefieres esperar; ${G} no aguanta el silencio y termina sacándote una sonrisa. Asunto resuelto.`,
+    CED:`Tú cedes con generosidad; ${G} lo nota (aunque no siempre lo diga) y se encarga de devolvértelo.`
+  };
+  return `<div class="bonus">
+    <span class="b-tag">✦ Bonus track</span>
+    <div class="b-twins">♊</div>
+    <h3>${fn}, tu compatibilidad con ${G}</h3>
+    <div class="b-sub">Análisis astral hecho con tus resultados · 0% científico, 100% buena onda</div>
+    <div class="b-text">${C[cs]||''}</div>
+    <div class="b-text">${K[ks]||''}</div>
+    <div class="b-meter">
+      <div class="b-meter-top"><span>Nivel de conexión con ${G}</span><span>97%</span></div>
+      <div class="b-track"><div class="b-fill" data-w="97%"></div></div>
+    </div>
+    <div class="b-note">Margen de error: ±3% (por si Mercurio está retrógrado).</div>
+    <div class="b-ps">P.D.: Si conoces a algún ${G}, quizá esto explique por qué te cae tan bien. 😉</div>
+  </div>`;
+}
+function renderBonus(cs,ks,name,uid){
+  const box=$('bonusBlock');
+  if(!bonusAplica(uid)){box.innerHTML='';return;}
+  box.innerHTML=bonusHtml(cs,ks,name);
+  const f=box.querySelector('.b-fill');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{f.style.width=f.dataset.w;}));
+}
+
+/* ═══ GRILLA KILMANN ═══ */
+function buildKilGrid(ks){
+  const styles=['COM','COL','NEG','EV','CED'];
+  const labels={COM:'Competitivo',COL:'Colaborativo',NEG:'Negociador',EV:'Evitativo',CED:'Adaptativo'};
+  const zones=[
+    {label:'+ de 9 · exceso',cls:'zona-excess',min:10,max:30},
+    {label:'8 – 9 · alto',cls:'zona-high',min:8,max:9},
+    {label:'5 – 7 · normal',cls:'zona-flex',min:5,max:7},
+    {label:'3 – 4 · bajo',cls:'zona-low',min:3,max:4},
+    {label:'- de 3 · carencia',cls:'zona-lack',min:0,max:2}
+  ];
+  let html=`<div class="kil-grid-title">📊 Perfil de estilo personal · Kilmann</div><table class="kil-grid-table"><thead><tr><th>Nivel</th>${styles.map(s=>`<th>${labels[s]}</th>`).join('')}</tr></thead><tbody>`;
+  zones.forEach(z=>{
+    html+=`<tr class="${z.cls}"><td>${z.label}</td>`;
+    styles.forEach(s=>{const v=ks[s]||0;html+=(v>=z.min&&v<=z.max)?`<td class="mark-my">${v}</td>`:'<td></td>';});
+    html+='</tr>';
+  });
+  return html+'</tbody></table>';
+}
+
+/* ═══ ¿CON QUIÉN COMUNICARTE PRIMERO? ═══ */
+const STYLE_NAMES={DI:'Directo',VI:'Vigoroso',CO:'Considerado',SI:'Sistemático'};
+const APPROACH_TIPS={
+  DI:{CO:'necesitan sentirse escuchadas antes de actuar: haz una pregunta antes de dar la indicación',VI:'conecta primero con la idea grande y el entusiasmo antes de ir al grano',SI:'dales datos concretos y contexto antes de pedir resultados'},
+  VI:{DI:'sé puntual y ve al grano desde el inicio: valoran la velocidad y la claridad',CO:'empieza preguntando cómo están antes de entrar al tema',SI:'dale estructura y datos a tus ideas antes de compartirlas: eso genera confianza'},
+  CO:{DI:'van al grano y complementan tu escucha: habla con más claridad sin perder tu calidez',VI:'deja que compartan primero su idea con entusiasmo antes de dar tu opinión',SI:'tómate un momento de conexión antes de entrar a los números: abre mucho la conversación'},
+  SI:{DI:'ve al punto rápido: valoran la precisión y la velocidad',VI:'le dan movimiento a tus análisis: comparte primero la idea grande y después los datos',CO:'conecta antes de compartir datos: un "¿cómo estás?" cambia el clima'}
+};
+function buildPartnerText(fn,dom,scores){
+  const others=Object.entries(scores).filter(([k])=>k!==dom).sort((a,b)=>b[1]-a[1]);
+  const total=Object.values(scores).reduce((s,v)=>s+v,0)||1;
+  const tips=APPROACH_TIPS[dom]||{};
+  if(!others.length)return `${fn}, adapta tu comunicación a cada persona según cómo reacciona.`;
+  let t='';
+  others.forEach(([k,v],i)=>{
+    const pct=Math.round(v/total*100);
+    if(i===0)t+=`${fn}, empieza por las personas de estilo <strong>${STYLE_NAMES[k]}</strong> (tu afinidad: ${pct}%)${tips[k]?': '+tips[k]:''}.`;
+    else t+=` ${i===others.length-1?'Y con':'Con'} quienes tienen estilo <strong>${STYLE_NAMES[k]}</strong> (${pct}%)${tips[k]?', '+tips[k]:''}.`;
+  });
+  return t;
+}
+
+/* ═══ ESTADO ═══ */
+let currentUser=null,phase=1,qi=0,commAns={},kilAns={};
+let commScores={DI:0,VI:0,CO:0,SI:0},kilScores={COM:0,COL:0,NEG:0,EV:0,CED:0};
+let results=null,orgTimer=null,orgData=[],previewMode=false;
+
+/* ═══ ENTRADA ═══ */
+$('startBtn').onclick=()=>{
+  const name=$('inName').value.trim().replace(/\s+/g,' ');
+  const dni=$('inDni').value.replace(/\D/g,'');
+  if(name.length<3||!/[a-zA-ZáéíóúÁÉÍÓÚñÑ]/.test(name)){$('startErr').textContent='Escribe tu nombre y apellido.';return;}
+  if(!/^\d{8}$/.test(dni)){$('startErr').textContent='El DNI debe tener 8 números.';return;}
+  if(ACCESO_DNI_SHA256.length&&!ACCESO_DNI_SHA256.includes(sha256(dni))){$('startErr').textContent='Este enlace es personal y no está habilitado para este DNI.';return;}
+  $('startErr').textContent='';previewMode=false;
+  currentUser={uid:dni,n:name,b:'',grupo:GROUP};
+  $('hiName').textContent='Hola, '+firstName(name)+' ✦';
+  $('hiSub').textContent=GROUP!=='general'?'Grupo: '+GROUP:'Vamos con la primera parte.';
+  show('scTest');
+  startCommTest();
+  checkExisting();
+  resyncLocalBackup();
+};
+['inName','inDni'].forEach(id=>$(id).addEventListener('keydown',e=>{if(e.key==='Enter')$('startBtn').click();}));
+$('inDni').addEventListener('input',e=>{e.target.value=e.target.value.replace(/\D/g,'').slice(0,8);});
+$('orgToggle').onclick=()=>{const p=$('orgPanel');p.style.display=p.style.display==='block'?'none':'block';if(p.style.display==='block')$('inOrg').focus();};
+$('orgBtn').onclick=()=>{
+  if(sha256($('inOrg').value)===CONFIG.ORG_PASS_SHA256){$('orgErr').textContent='';$('inOrg').value='';show('scOrg');startOrg();}
+  else $('orgErr').textContent='Contraseña incorrecta.';
+};
+$('inOrg').addEventListener('keydown',e=>{if(e.key==='Enter')$('orgBtn').click();});
+
+function doLogout(){
+  clearTimeout(retryTimer);stopOrg();resetSaveUi();previewMode=false;
+  currentUser=null;phase=1;qi=0;commAns={};kilAns={};results=null;
+  commScores={DI:0,VI:0,CO:0,SI:0};kilScores={COM:0,COL:0,NEG:0,EV:0,CED:0};
+  ['inName','inDni','inOrg'].forEach(id=>$(id).value='');
+  $('orgPanel').style.display='none';$('orgErr').textContent='';$('startErr').textContent='';
+  $('resumeCard').style.display='none';
+  $('commResultSection').style.display='none';$('kilResultSection').style.display='none';
+  $('qCard').style.display='block';$('phaseCard').style.display='block';
+  show('scStart');
+}
+
+/* ═══ PERFIL YA GUARDADO ═══ */
+let existingEntry=null;
+async function checkExisting(){
+  const uid=currentUser.uid;
+  const local=localBackupGet().filter(e=>e.uid===uid);
+  const remote=await readAll();
+  if(!currentUser||currentUser.uid!==uid)return;
+  const mine=mergeEntries(remote||[],local).filter(e=>e.uid===uid).sort((a,b)=>(b.ts||0)-(a.ts||0));
+  if(!mine.length)return;
+  existingEntry=mine[0];
+  existingEntry._inCloud=!!(remote&&remote.some(e=>entryKey(e)===entryKey(existingEntry)));
+  $('resumeTxt').textContent='Tienes un perfil guardado ('+fmtFecha(existingEntry.ts)+'). Puedes verlo de nuevo o volver a hacer el test.';
+  $('resumeCard').style.display='block';
+}
+$('resumeView').onclick=()=>{
+  const e=existingEntry;if(!e)return;
+  commScores=Object.assign({DI:0,VI:0,CO:0,SI:0},e.commScores);
+  kilScores=Object.assign({COM:0,COL:0,NEG:0,EV:0,CED:0},e.kilScores);
+  results={commDom:e.commDom,kilDom:e.kilDom,commScores,kilScores};
+  if(e._inCloud)results.savedId=e.id;else results.pendingEntry=e;
+  $('resumeCard').style.display='none';$('bridgeCard').style.display='none';
+  renderCommResult(e.commDom);renderKilResult(e.kilDom,e.commDom);
+  const b=$('saveBtn');
+  if(results.savedId){b.textContent='✅ Perfil guardado';b.disabled=true;setSave('✅ Este perfil ya está guardado.','ok');}
+  else{b.textContent='Guardar mi perfil';b.disabled=false;setSave('⚠️ Este perfil está solo en este dispositivo. Toca "Guardar mi perfil" para subirlo.','err');}
+};
+$('resumeNew').onclick=()=>{$('resumeCard').style.display='none';startCommTest();};
+
+/* ═══ FLUJO DEL TEST ═══ */
+function startCommTest(){
+  phase=1;qi=0;commAns={};commScores={DI:0,VI:0,CO:0,SI:0};
+  $('commResultSection').style.display='none';$('kilResultSection').style.display='none';
+  $('bridgeCard').style.display='block';
+  $('qCard').style.display='block';$('phaseCard').style.display='block';
+  renderQ();
+}
+function startKilmann(){
+  phase=2;qi=0;kilAns={};kilScores={COM:0,COL:0,NEG:0,EV:0,CED:0};
+  $('bridgeCard').style.display='none';
+  $('qCard').style.display='block';$('phaseCard').style.display='block';
+  renderQ();
+  setTimeout(()=>$('phaseCard').scrollIntoView({behavior:'smooth',block:'start'}),50);
+}
+const currentQ=()=>phase===1?COMM_Q[qi]:KIL_Q[qi];
+const totalQ=()=>phase===1?COMM_Q.length:KIL_Q.length;
+const currentAns=()=>phase===1?commAns:kilAns;
+function renderQ(){
+  const q=currentQ(),total=totalQ(),pct=Math.round(((qi+1)/total)*100);
+  $('phaseLbl').textContent=phase===1?'Parte 1 de 2 · Comunicación':'Parte 2 de 2 · Conflictos';
+  $('phaseTitle').textContent=phase===1?'¿Cuál es tu estilo de comunicación?':'¿Cómo manejas los conflictos?';
+  $('phaseHint').textContent=phase===1?'24 preguntas · Elige la opción que más te describe en tu día a día.':'30 pares de frases · Elige la que más se parece a cómo actúas normalmente.';
+  $('progLbl').textContent=`Pregunta ${qi+1} de ${total}`;
+  $('progNum').textContent=pct+'%';$('progFill').style.width=pct+'%';
+  $('qNum').textContent=(phase===1?'Comunicación ':'Conflictos ')+(qi+1)+' / '+total;
+  $('qText').textContent=phase===1?q.q:'Elige la frase que más se parece a ti:';
+  const ol=$('optList');ol.innerHTML='';
+  const ans=currentAns(),letters=['A','B','C','D'];
+  q.o.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt'+(ans[qi]===i?' sel':'');
+    btn.innerHTML=`<span class="ol">${letters[i]}</span><span>${esc(opt)}</span>`;
+    btn.onclick=()=>selectOpt(i);ol.appendChild(btn);
+  });
+  $('prevBtn').disabled=(qi===0&&phase===1);
+  $('nextBtn').textContent=(qi===total-1)?(phase===1?'Ver mi resultado →':'Ver mi perfil completo ✦'):'Siguiente →';
+}
+let advancing=false;
+function selectOpt(i){
+  if(advancing)return;
+  currentAns()[qi]=i;
+  document.querySelectorAll('.opt').forEach((b,idx)=>b.classList.toggle('sel',idx===i));
+  advancing=true;
+  setTimeout(()=>{advancing=false;if(qi<totalQ()-1){qi++;renderQ();}else{phase===1?computeComm():computeKil();}},360);
+}
+function navQ(dir){
+  const ans=currentAns();
+  if(dir===1){
+    if(ans[qi]===undefined){toast('Elige una opción para continuar.');return;}
+    if(qi===totalQ()-1){phase===1?computeComm():computeKil();return;}
+    qi++;
+  }else{
+    if(qi===0&&phase===2){phase=1;qi=COMM_Q.length-1;}else if(qi>0)qi--;
+  }
+  renderQ();
+}
+const topKey=o=>Object.entries(o).sort((a,b)=>b[1]-a[1])[0][0];
+
+/* ═══ RESULTADO COMUNICACIÓN ═══ */
+function computeComm(){
+  commScores={DI:0,VI:0,CO:0,SI:0};
+  COMM_Q.forEach((q,i)=>{const a=commAns[i];if(a!==undefined)commScores[q.m[a]]++;});
+  renderCommResult(topKey(commScores));
+}
+function barsHtml(scores,total,labels){
+  const sorted=Object.entries(scores).sort((a,b)=>b[1]-a[1]);const maxV=sorted[0][1];
+  return sorted.map(([k,v],i)=>{
+    const pct=Math.round(v/total*100),fill=maxV?Math.round(v/maxV*100):0;
+    return `<div class="sbar-row${i===0?' top-style':''}"><div class="sbar-lbl">${labels[k]}${i===0?'<span class="sbar-crown"> ★</span>':''}</div><div class="sbar-track"><div class="sbar-fill ${k.toLowerCase()}" style="width:${fill}%"></div></div><div class="sbar-pct">${pct}% <span style="font-weight:400;color:var(--muted);font-size:11px">(${v})</span></div></div>`;
+  }).join('');
+}
+const COMM_LBL={DI:'Directo',VI:'Vigoroso',CO:'Considerado',SI:'Sistemático'};
+const KIL_LBL={COM:'Competitivo',COL:'Colaborativo',NEG:'Negociador',EV:'Evitativo',CED:'Adaptativo'};
+const COMM_ORDER=['DI','VI','CO','SI'],KIL_ORDER=['COM','COL','NEG','EV','CED'];
+const RADAR_COMM={fill:'rgba(207,106,51,0.18)',line:'rgba(207,106,51,0.9)',pt:'#CF6A33'};
+const RADAR_KIL={fill:'rgba(47,143,99,0.16)',line:'rgba(47,143,99,0.85)',pt:'#2F8F63'};
+function radarConfig(labels,vals,c,pr){
+  return {type:'radar',data:{labels,datasets:[{data:vals,fill:true,backgroundColor:c.fill,borderColor:c.line,pointBackgroundColor:c.pt,pointBorderColor:'#fff',pointRadius:pr||5,borderWidth:2}]},
+    options:{responsive:true,plugins:{legend:{display:false}},scales:{r:{beginAtZero:true,max:Math.max(...vals,2)+2,ticks:{stepSize:2,font:{size:10},color:'#6C7378',backdropColor:'rgba(0,0,0,0)'},pointLabels:{font:{size:11,weight:'600'},color:'#1E2A2F'},grid:{color:'rgba(0,0,0,0.07)'},angleLines:{color:'rgba(0,0,0,0.1)'}}}}};
+}
+let commRadarChart=null,kilRadarChart=null;
+function coachHtml(icon,av,p,fn,subTitle,subText){
+  return `<div class="coach-avatar"><div class="coach-ic">${icon}</div><div><div class="coach-tag">Consejo de tu coach</div><div class="coach-name">${av.char} ${p.name}</div></div></div>
+    <div class="coach-text">${p.desc(fn)}</div>
+    <div class="coach-sub"><span class="cs-h">${subTitle}</span>${subText}</div>
+    <div class="sw-grid">
+      <div class="sw-item str"><div class="sw-icon">✦</div><div class="sw-title">Lo que suma</div><div class="sw-body">${p.str(fn).join('<br>')}</div></div>
+      <div class="sw-item wat"><div class="sw-icon">⚡</div><div class="sw-title">A tener en cuenta</div><div class="sw-body">${p.watch(fn).join('<br>')}</div></div>
+    </div>
+    <div class="coach-tip">💡 ${p.tip(fn)}</div>`;
+}
+function renderCommResult(dom){
+  $('qCard').style.display='none';$('phaseCard').style.display='none';
+  $('commResultSection').style.display='block';
+  const av=COMM_AVATARS[dom],cp=COMM_PROFILES[dom],fn=esc(firstName(currentUser.n));
+  $('commChar').textContent=av.char;
+  const badge=$('commBadge');badge.textContent=av.label;badge.className='av-badge '+dom;
+  $('commSub').textContent=av.sub;
+  $('commStyleName').textContent=av.label;$('commStyleSub').textContent=cp.sub;
+  $('commBars').innerHTML=barsHtml(commScores,COMM_Q.length,COMM_LBL);
+  try{if(commRadarChart)commRadarChart.destroy();commRadarChart=new Chart($('commRadar').getContext('2d'),radarConfig(COMM_ORDER.map(k=>COMM_LBL[k]),COMM_ORDER.map(k=>commScores[k]||0),RADAR_COMM));}catch(e){$('commRadar').style.display='none';}
+  $('commCoach').innerHTML=coachHtml('🧭',av,cp,fn,'¿Con quién comunicarte primero?',buildPartnerText(fn,dom,commScores));
+  $('commResultSection').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* ═══ RESULTADO CONFLICTOS ═══ */
+function computeKil(){
+  kilScores={COM:0,COL:0,NEG:0,EV:0,CED:0};
+  KIL_Q.forEach((q,i)=>{const a=kilAns[i];if(a!==undefined)kilScores[q.m[a]]++;});
+  const dom=topKey(kilScores),commDom=topKey(commScores);
+  results={commDom,kilDom:dom,commScores,kilScores};
+  resetSaveUi();
+  renderKilResult(dom,commDom);
+  retryCount=0;
+  saveProfile(true);   // guardado automático
+}
+function synthHtml(cs,ks,name,own){
+  const cp=COMM_PROFILES[cs],kp=KIL_PROFILES[ks],cav=COMM_AVATARS[cs],kav=KIL_AVATARS[ks];
+  const s=getSynthesis(cs,ks,esc(name));
+  return `<div class="s-tag">${own?'Tu perfil completo de liderazgo':'Perfil completo de liderazgo'}</div>
+    <div class="synth-duo">
+      <div class="synth-card comm-card"><div class="sc-label">Cómo comunica${own?'s':''}</div><span class="sc-char">${cav.char}</span><div class="sc-name">${cp.name}</div></div>
+      <div class="synth-card kil-card"><div class="sc-label">Cómo resuelve${own?'s':''}</div><span class="sc-char">${kav.char}</span><div class="sc-name">${kp.name}</div></div>
+    </div>
+    <div class="synth-divider">✦ así ${own?'lideras':'lidera'} ✦</div>
+    <div class="synth-body">${s.body}</div>
+    <div class="synth-super"><div class="ss-label">★ ${own?'Tu':'Su'} superpoder esta semana</div><div class="ss-text">${s.superpower}</div></div>
+    <div class="synth-actions">${s.tips.map(t=>`<div class="synth-action"><span class="sa-arrow">→</span><span>${t}</span></div>`).join('')}</div>`;
+}
+function renderKilResult(dom,commDom){
+  $('qCard').style.display='none';$('phaseCard').style.display='none';
+  $('kilResultSection').style.display='block';
+  const av=KIL_AVATARS[dom],kp=KIL_PROFILES[dom],fn=esc(firstName(currentUser.n));
+  $('kilChar').textContent=av.char;
+  const badge=$('kilBadge');badge.textContent=av.label;badge.className='av-badge '+dom;
+  $('kilSub').textContent=av.sub;
+  $('kilStyleName').textContent=av.label;$('kilStyleSub').textContent=kp.sub;
+  $('kilBars').innerHTML=barsHtml(kilScores,KIL_Q.length,KIL_LBL);
+  try{if(kilRadarChart)kilRadarChart.destroy();kilRadarChart=new Chart($('kilRadar').getContext('2d'),radarConfig(KIL_ORDER.map(k=>KIL_LBL[k]),KIL_ORDER.map(k=>kilScores[k]||0),RADAR_KIL));}catch(e){$('kilRadar').style.display='none';}
+  $('kilGrid').innerHTML=buildKilGrid(kilScores);
+  $('kilCoach').innerHTML=coachHtml('🔮',av,kp,fn,'¿Cuándo usarlo?',kp.when(fn));
+  $('synthBlock').innerHTML=synthHtml(commDom,dom,currentUser.n,true);
+  renderBonus(commDom,dom,currentUser.n,currentUser.uid);
+  $('kilResultSection').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* ═══ BASE DE DATOS (JSONBin) ═══ */
+function binRecordToEntries(j){const rec=(j&&j.record!==undefined)?j.record:j;return Array.isArray(rec)?rec:((rec&&rec.entries)||[]);}
+function entryKey(e){return e.id||(e.uid+'_'+(e.ts||0));}
+function mergeEntries(base,extra){
+  const map=new Map();
+  (base||[]).forEach(e=>{if(e&&e.uid)map.set(entryKey(e),e);});
+  (extra||[]).forEach(e=>{if(e&&e.uid&&!map.has(entryKey(e)))map.set(entryKey(e),e);});
+  return Array.from(map.values()).sort((a,b)=>(a.ts||0)-(b.ts||0));
+}
+function errMsg(status){
+  if(status===401)return 'La llave de JSONBin es inválida o no tiene permiso sobre este bin (HTTP 401).';
+  if(status===403)return 'JSONBin rechazó la solicitud: probablemente se agotó la cuota de la cuenta o la llave no tiene ese permiso (HTTP 403).';
+  if(status===404)return 'El bin no existe o fue borrado (HTTP 404).';
+  if(status===429)return 'Demasiadas solicitudes seguidas a JSONBin (HTTP 429). Espera un minuto.';
+  if(!status)return 'No hay conexión con la base de datos (sin internet o el sitio bloquea la conexión).';
+  return 'Error HTTP '+status+' al conectar con JSONBin.';
+}
+async function httpError(r){
+  let detail='';try{const j=await r.json();detail=(j&&j.message)||'';}catch(e){}
+  const err=new Error(errMsg(r.status)+(detail?' Detalle: '+detail:''));err.status=r.status;return err;
+}
+function authHeaders(extra){const h=Object.assign({},extra||{});h[CONFIG.KEY_HEADER]=CONFIG.KEY;return h;}
+async function readRemoteStrict(){
+  if(!cloudOk){try{return JSON.parse(localStorage.getItem(LOCAL_DB)||'[]');}catch(e){return [];}}
+  let r;
+  try{r=await fetch(API+'/latest',{headers:authHeaders({'X-Bin-Meta':'false'}),cache:'no-store'});}
+  catch(e){const err=new Error(errMsg(0));err.status=0;throw err;}
+  if(!r.ok)throw await httpError(r);
+  return binRecordToEntries(await r.json());
+}
+async function writeRemote(entries){
+  if(!cloudOk){localStorage.setItem(LOCAL_DB,JSON.stringify(entries));return;}
+  let r;
+  try{r=await fetch(API,{method:'PUT',headers:authHeaders({'Content-Type':'application/json','X-Bin-Versioning':'false'}),body:JSON.stringify({entries})});}
+  catch(e){const err=new Error(errMsg(0));err.status=0;throw err;}
+  if(!r.ok)throw await httpError(r);
+}
+// Devuelve la lista o null si no se pudo leer (motivo en lastReadError)
+let lastReadError='';
+async function readAll(){
+  try{const all=await readRemoteStrict();lastReadError='';return all;}
+  catch(e){lastReadError=e.message||String(e);console.error('[BD]',lastReadError);return null;}
+}
+// Sube entradas sin borrar las demás y confirma que quedaron (normalmente 3 solicitudes)
+let lastSaveError='';
+async function pushEntriesSafe(newEntries){
+  const keys=newEntries.map(entryKey);
+  for(let i=1;i<=4;i++){
+    try{
+      if(cloudOk)await sleepMs(i===1?Math.random()*600:(1500*i+Math.random()*1000));
+      const current=await readRemoteStrict();
+      const have=new Set(current.map(entryKey));
+      if(!keys.every(k=>have.has(k))){
+        await writeRemote(mergeEntries(current,newEntries));
+        if(cloudOk)await sleepMs(1500);
+      }
+      const again=new Set((await readRemoteStrict()).map(entryKey));
+      if(keys.every(k=>again.has(k))){lastSaveError='';return true;}
+    }catch(e){
+      lastSaveError=e.message||String(e);
+      if(e.status===401||e.status===403||e.status===404)break;
+    }
+  }
+  return false;
+}
+// Respaldo en el dispositivo: si la nube falla, se resube al volver a entrar
+function localBackupGet(){try{return JSON.parse(localStorage.getItem(LS_BACKUP)||'[]');}catch(e){return [];}}
+function localBackupAdd(entry){try{localStorage.setItem(LS_BACKUP,JSON.stringify(mergeEntries(localBackupGet(),[entry])));}catch(e){}}
+async function resyncLocalBackup(){
+  const mine=localBackupGet();if(!mine.length)return;
+  try{
+    const have=new Set((await readRemoteStrict()).map(entryKey));
+    const missing=mine.filter(e=>!have.has(entryKey(e)));
+    if(missing.length)await pushEntriesSafe(missing);
+  }catch(e){}
+}
+
+/* ═══ GUARDAR ═══ */
+let saving=false,retryTimer=null,retryCount=0;
+function setSave(m,c){const el=$('saveStatus');el.textContent=m;el.className='save-status '+(c||'');}
+function resetSaveUi(){clearTimeout(retryTimer);const b=$('saveBtn');b.disabled=false;b.textContent='Guardar mi perfil';setSave('','');}
+async function saveProfile(auto){
+  if(!results){toast('Completa ambas partes primero.');return;}
+  if(previewMode){const b=$('saveBtn');b.disabled=true;b.textContent='Vista previa';setSave('👁 Vista previa: este resultado no se guarda.','loading');return;}
+  if(saving)return;
+  if(results.savedId){setSave('✅ Tu perfil ya está guardado.','ok');return;}
+  if(!results.pendingEntry){
+    const ts=Date.now();
+    results.pendingEntry={uid:currentUser.uid,name:currentUser.n,rol:currentUser.b||'',grupo:currentUser.grupo,commDom:results.commDom,kilDom:results.kilDom,commScores:results.commScores,kilScores:results.kilScores,ts,id:currentUser.uid+'_'+ts};
+  }
+  const entry=results.pendingEntry;
+  localBackupAdd(entry);
+  saving=true;
+  const btn=$('saveBtn');btn.disabled=true;btn.textContent='Guardando…';
+  setSave(auto?'Guardando tu perfil… no cierres esta página':'Guardando… no cierres esta página','loading');
+  const ok=await pushEntriesSafe([entry]);
+  saving=false;clearTimeout(retryTimer);
+  if(!results||results.pendingEntry!==entry)return;
+  if(ok){
+    results.savedId=entry.id;retryCount=0;
+    btn.textContent='✅ Perfil guardado';btn.disabled=true;
+    setSave(cloudOk?'✅ Perfil guardado correctamente.':'✅ Guardado en este navegador (modo de prueba).','ok');
+  }else{
+    btn.textContent='Reintentar guardar';btn.disabled=false;
+    setSave('⚠️ No se pudo guardar en línea. '+(lastSaveError||'')+' Tu perfil quedó en este dispositivo: descarga tu PDF por si acaso.','err');
+    if(retryCount<5){retryCount++;retryTimer=setTimeout(()=>{if(results&&!results.savedId&&results.pendingEntry===entry)saveProfile(true);},60000);}
+  }
+}
+$('saveBtn').onclick=()=>{retryCount=0;saveProfile(false);};
+$('pdfBtn').onclick=async()=>{
+  if(!results){toast('Completa los tests primero.');return;}
+  const b=$('pdfBtn'),orig=b.textContent;b.disabled=true;b.textContent='Generando PDF…';
+  const keep=results;
+  const ok=await exportPdf({uid:currentUser.uid,name:currentUser.n,rol:currentUser.b,grupo:currentUser.grupo,commDom:results.commDom,kilDom:results.kilDom,commScores,kilScores},false);
+  results=keep;
+  b.disabled=false;b.textContent=orig;
+  if(!ok)toast('No se pudo generar el PDF. Intenta de nuevo.');
+};
+
+/* ═══ BOTONES DE REPETIR ═══ */
+function armedButton(id,label,onConfirm){
+  let armed=false;const b=$(id);
+  b.addEventListener('click',()=>{
+    if(!armed){armed=true;b.textContent='¿Seguro? Toca de nuevo para confirmar';b.classList.add('warn');clearTimeout(b._t);b._t=setTimeout(()=>{armed=false;b.textContent=label;b.classList.remove('warn');},4000);return;}
+    armed=false;b.textContent=label;b.classList.remove('warn');onConfirm();
+  });
+}
+armedButton('clearCommBtn','¿Te equivocaste? Borrar y repetir esta parte',()=>startCommTest());
+armedButton('clearKilBtn','¿Te equivocaste? Borrar y repetir solo esta parte',()=>{$('kilResultSection').style.display='none';startKilmann();});
+armedButton('clearBtn','Reiniciar el test (borra ambas partes)',()=>{kilAns={};kilScores={COM:0,COL:0,NEG:0,EV:0,CED:0};startCommTest();});
+
+/* ══════════════════════════════════════════════════════════════
+   EXPORTADOR PDF (html2canvas + jsPDF, cortes sin partir bloques)
+   ══════════════════════════════════════════════════════════════ */
+const PDF_CFG={renderW:760,scaleMax:2.4,maxCanvasPx:22e6,marginMm:11,footerMm:9,atomPadPx:12,minFill:0.10,shrinkSteps:[1,0.97,0.94,0.91,0.88]};
+async function pdfEsperarTipografia(doc){
+  try{
+    const links=[...doc.querySelectorAll('link[rel="stylesheet"]')];
+    await Promise.all(links.map(l=>l.sheet?Promise.resolve():new Promise(res=>{l.addEventListener('load',res,{once:true});l.addEventListener('error',res,{once:true});setTimeout(res,1500);})));
+  }catch(e){}
+  try{
+    if(doc.fonts&&doc.fonts.load)await Promise.all(['400','600','700','800'].map(w=>doc.fonts.load(w+" 14px 'Plus Jakarta Sans'")));
+    if(doc.fonts&&doc.fonts.ready)await doc.fonts.ready;
+  }catch(e){}
+}
+function pdfMedirBloques(root){
+  const wr=root.getBoundingClientRect();
+  const nodos=[...root.querySelectorAll('[data-pdf-atom]')];
+  const atomos=nodos.filter(n=>!nodos.some(o=>o!==n&&o.contains(n)));
+  const zonas=[];
+  atomos.forEach(n=>{const r=n.getBoundingClientRect();if(r.height>0)zonas.push({top:r.top-wr.top,bottom:r.bottom-wr.top});});
+  return {height:wr.height,width:wr.width,zonas};
+}
+function pdfPlanificarPaginas(imgH,zonas,altoPagPx){
+  const dentro=p=>zonas.some(z=>p>z.top+0.5&&p<z.bottom-0.5);
+  const cand=[];zonas.forEach(z=>{cand.push(z.top);cand.push(z.bottom);});cand.push(imgH);cand.sort((a,b)=>a-b);
+  const minSlice=altoPagPx*PDF_CFG.minFill;const paginas=[];let y=0,guarda=0;
+  while(y<imgH-1&&guarda++<400){
+    let corte=Math.min(y+altoPagPx,imgH);
+    if(corte<imgH&&dentro(corte)){
+      let mejor=-1;
+      for(const c of cand){if(c>corte)break;if(c<=y+minSlice)continue;if(!dentro(c))mejor=c;}
+      if(mejor>y)corte=mejor;
+      else{let fin=corte;for(let p=0;p<4;p++){const antes=fin;zonas.forEach(z=>{if(fin>z.top&&fin<z.bottom)fin=z.bottom;});if(fin===antes)break;}corte=Math.min(fin,imgH);}
+    }
+    if(corte<=y)corte=Math.min(y+altoPagPx,imgH);
+    paginas.push({from:y,to:corte});y=corte;
+  }
+  return paginas;
+}
+function radarPng(labels,vals,c){
+  try{
+    if(typeof Chart==='undefined')return'';
+    const L=300,D=2;const cv=document.createElement('canvas');cv.width=L*D;cv.height=L*D;
+    const ch=new Chart(cv.getContext('2d'),{type:'radar',data:{labels,datasets:[{data:vals,fill:true,backgroundColor:c.fill,borderColor:c.line,pointBackgroundColor:c.pt,pointBorderColor:'#fff',pointRadius:5*D,borderWidth:2*D}]},
+      options:{responsive:false,animation:false,devicePixelRatio:1,plugins:{legend:{display:false}},scales:{r:{beginAtZero:true,max:Math.max(...vals,2)+2,ticks:{stepSize:2,font:{size:10*D},color:'#6C7378',backdropColor:'rgba(0,0,0,0)'},pointLabels:{font:{size:12*D,weight:'600'},color:'#1E2A2F'},grid:{color:'rgba(0,0,0,0.07)',lineWidth:D},angleLines:{color:'rgba(0,0,0,0.1)',lineWidth:D}}}}});
+    const url=cv.toDataURL('image/png');ch.destroy();
+    return `<img src="${url}" width="${L}" height="${L}" style="display:block;margin:8px auto 0;width:${L}px;height:${L}px" alt="Radar">`;
+  }catch(e){return'';}
+}
+function prepararEstado(entry){
+  commScores=Object.assign({DI:0,VI:0,CO:0,SI:0},entry.commScores||{});
+  kilScores=Object.assign({COM:0,COL:0,NEG:0,EV:0,CED:0},entry.kilScores||{});
+  currentUser={uid:entry.uid,n:entry.name||'',b:entry.rol||'',grupo:entry.grupo||'general'};
+  results={commDom:entry.commDom,kilDom:entry.kilDom,commScores,kilScores};
+  const proto=Element.prototype,orig=proto.scrollIntoView;proto.scrollIntoView=function(){};
+  try{
+    try{renderCommResult(entry.commDom);}catch(e){console.warn(e);}
+    try{renderKilResult(entry.kilDom,entry.commDom);}catch(e){console.warn(e);}
+  }finally{proto.scrollIntoView=orig;}
+}
+function seccionParaPdf(id,png){
+  const src=$(id);if(!src)return null;
+  const clone=src.cloneNode(true);clone.removeAttribute('id');clone.style.display='block';
+  clone.querySelectorAll('button,.clearbtn,.part-bridge,.save-status').forEach(n=>n.remove());
+  clone.querySelectorAll('[id]').forEach(n=>n.removeAttribute('id'));
+  clone.querySelectorAll('.radar-wrap').forEach(w=>w.innerHTML=png||'');
+  clone.querySelectorAll('canvas').forEach(n=>n.remove());
+  clone.querySelectorAll('.b-fill').forEach(n=>{n.style.transition='none';n.style.width=n.dataset.w;});
+  [...clone.children].forEach(n=>{if(n.nodeType===1&&n.children.length+String(n.textContent).trim().length>0)n.setAttribute('data-pdf-atom','1');});
+  return clone;
+}
+async function exportPdf(entry,asBlob){
+  let wrapper=null;
+  try{
+    prepararEstado(entry);
+    const pngC=radarPng(COMM_ORDER.map(k=>COMM_LBL[k]),COMM_ORDER.map(k=>commScores[k]||0),RADAR_COMM);
+    const pngK=radarPng(KIL_ORDER.map(k=>KIL_LBL[k]),KIL_ORDER.map(k=>kilScores[k]||0),RADAR_KIL);
+    wrapper=document.createElement('div');
+    wrapper.style.cssText=`position:absolute;top:0;left:-9999px;background:#fff;padding:24px 22px;font-family:'Plus Jakarta Sans',system-ui,sans-serif;width:${PDF_CFG.renderW}px;box-sizing:border-box`;
+    const hdr=document.createElement('div');hdr.setAttribute('data-pdf-atom','1');
+    hdr.style.cssText='margin-bottom:16px;padding-bottom:11px;border-bottom:2.5px solid #CF6A33';
+    const meta=[esc(entry.name),entry.uid?'DNI '+esc(entry.uid):'',entry.grupo&&entry.grupo!=='general'?'Grupo: '+esc(entry.grupo):'',new Date(entry.ts||Date.now()).toLocaleDateString('es-PE',{day:'2-digit',month:'long',year:'numeric'})].filter(Boolean).join(' · ');
+    hdr.innerHTML=`<div style="font-size:9px;letter-spacing:1.8px;font-weight:700;color:#CF6A33;text-transform:uppercase;margin-bottom:4px">🧭 Brújula de Liderazgo · Comunicación y manejo de conflictos</div>
+      <div style="font-size:21px;font-weight:800;color:#1F4E5F;line-height:1.2">Perfil de <span style="color:#CF6A33">liderazgo</span></div>
+      <div style="font-size:11px;color:#6C7378;margin-top:4px">${meta}</div>`;
+    wrapper.appendChild(hdr);
+    const sc=seccionParaPdf('commResultSection',pngC);if(sc)wrapper.appendChild(sc);
+    const sk=seccionParaPdf('kilResultSection',pngK);if(sk)wrapper.appendChild(sk);
+    const sp=document.createElement('div');sp.style.height='16px';wrapper.appendChild(sp);
+    document.body.appendChild(wrapper);
+    await pdfEsperarTipografia(document);await sleepMs(250);
+    const fallback=pdfMedirBloques(wrapper);
+    let scale=PDF_CFG.scaleMax;const altoCss=Math.max(fallback.height,wrapper.scrollHeight,1);
+    while(scale>1.2&&(PDF_CFG.renderW*scale)*(altoCss*scale)>PDF_CFG.maxCanvasPx)scale-=0.2;
+    let metrics=null;
+    const canvas=await html2canvas(wrapper,{scale,useCORS:true,backgroundColor:'#ffffff',logging:false,windowWidth:PDF_CFG.renderW+300,windowHeight:Math.max(1200,altoCss+300),scrollX:0,scrollY:0,
+      onclone:async(d,cl)=>{await pdfEsperarTipografia(d);await sleepMs(80);try{metrics=pdfMedirBloques(cl);}catch(e){metrics=null;}}});
+    const med=(metrics&&metrics.height>0)?metrics:fallback;
+    const {jsPDF}=window.jspdf;const imgW=canvas.width,imgH=canvas.height;
+    const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    const pageW=pdf.internal.pageSize.getWidth(),pageH=pdf.internal.pageSize.getHeight();
+    const margin=PDF_CFG.marginMm,usableW=pageW-margin*2,usableH=pageH-margin*2-PDF_CFG.footerMm;
+    const sy=med.height>0?(imgH/med.height):scale;const altoPag=imgW*(usableH/usableW);
+    const zonas=med.zonas.map(z=>({top:z.top*sy,bottom:z.bottom*sy})).filter(z=>z.bottom>z.top+1).sort((a,b)=>a.top-b.top);
+    const pad=PDF_CFG.atomPadPx*sy;
+    zonas.forEach(z=>{let sig=imgH;zonas.forEach(o=>{if(o.top>=z.bottom&&o.top<sig)sig=o.top;});z.bottom=Math.min(imgH,z.bottom+Math.max(0,Math.min(pad,(sig-z.bottom)*0.6)));});
+    if(imgH<=altoPag){
+      pdf.addImage(canvas.toDataURL('image/jpeg',0.95),'JPEG',margin,margin,usableW,(imgH/imgW)*usableW);
+    }else{
+      let mejor=null;
+      PDF_CFG.shrinkSteps.forEach(k=>{const pg=pdfPlanificarPaginas(imgH,zonas,altoPag/k);if(!mejor||pg.length<mejor.paginas.length)mejor={k,paginas:pg};});
+      mejor.paginas.forEach((p,i)=>{
+        if(i>0)pdf.addPage();
+        const sh=Math.max(1,Math.round(p.to-p.from));const sl=document.createElement('canvas');sl.width=imgW;sl.height=sh;
+        const ctx=sl.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,imgW,sh);ctx.drawImage(canvas,0,p.from,imgW,sh,0,0,imgW,sh);
+        let dw=usableW*mejor.k,dh=(sh/imgW)*dw;if(dh>usableH){const f=usableH/dh;dw*=f;dh=usableH;}
+        pdf.addImage(sl.toDataURL('image/jpeg',0.95),'JPEG',margin+(usableW-dw)/2,margin,dw,dh);
+      });
+    }
+    const tp=pdf.internal.getNumberOfPages();
+    for(let p=1;p<=tp;p++){pdf.setPage(p);pdf.setFontSize(8);pdf.setTextColor(150);
+      pdf.text('Brújula de Liderazgo · Perfil de comunicación y manejo de conflictos',margin,pageH-5);
+      if(tp>1)pdf.text('Pág. '+p+' / '+tp,pageW-margin,pageH-5,{align:'right'});}
+    const safe=String(entry.name||'perfil').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-zA-Z0-9 ]/g,'').trim().replace(/\s+/g,'_').slice(0,45)||'perfil';
+    const filename='BrujulaLiderazgo_'+safe+'.pdf';
+    if(asBlob)return {blob:pdf.output('blob'),filename};
+    pdf.save(filename);return true;
+  }catch(err){console.error('PDF error:',err);return asBlob?null:false;}
+  finally{if(wrapper&&wrapper.parentNode)wrapper.parentNode.removeChild(wrapper);}
+}
+function triggerBlobDownload(blob,filename){
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;
+  document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);
+}
+function limpiarEstadoTest(){
+  currentUser=null;results=null;
+  commScores={DI:0,VI:0,CO:0,SI:0};kilScores={COM:0,COL:0,NEG:0,EV:0,CED:0};
+  $('commResultSection').style.display='none';$('kilResultSection').style.display='none';
+}
+
+/* ═══ PANEL DEL ORGANIZADOR ═══ */
+const COMM_LABELS={DI:'⚡ Directo',VI:'🔥 Vigoroso',CO:'🤝 Considerado',SI:'📊 Sistemático'};
+const KIL_LABELS={COM:'⚔️ Competitivo',COL:'🤝 Colaborativo',NEG:'⚖️ Negociador',EV:'🚪 Evitativo',CED:'🕊️ Adaptativo'};
+const COMM_COLORS={DI:'#C8435A',VI:'#CF6A33',CO:'#2F8F63',SI:'#1F4E5F'};
+const KIL_COLORS={COM:'#C8435A',COL:'#2F8F63',NEG:'#D99A22',EV:'#8A9298',CED:'#5578AD'};
+let orgCommChart=null,orgKilChart=null;
+function startOrg(){stopOrg();pollOrg();orgTimer=setInterval(()=>{if(!document.hidden)pollOrg();},CONFIG.POLL_MS);updateGroupLink();}
+function stopOrg(){clearInterval(orgTimer);orgTimer=null;}
+function latestPerUid(entries){const m=new Map();entries.forEach(e=>{const p=m.get(e.uid);if(!p||(e.ts||0)>=(p.ts||0))m.set(e.uid,e);});return [...m.values()];}
+async function pollOrg(){
+  if(pollOrg.busy)return;pollOrg.busy=true;
+  const btn=$('orgRefreshBtn');btn.textContent='↻ Actualizando…';btn.disabled=true;
+  const raw=await readAll();
+  btn.textContent='↻ Actualizar';btn.disabled=false;pollOrg.busy=false;
+  if(raw===null){
+    $('orgAlerts').innerHTML='<div class="alert-box red"><b>No se pudo leer la base de datos.</b> '+esc(lastReadError)+'<br><span style="font-size:12px">Lo que ves puede estar desactualizado. Se volverá a intentar en 30 s.</span></div>';
+    return;
+  }
+  orgData=raw.filter(e=>e&&e.uid&&e.commDom&&e.kilDom);
+  renderOrg();
+}
+function renderOrg(){
+  // selector de grupos
+  const groups=[...new Set(orgData.map(e=>e.grupo||'general'))].sort();
+  const sel=$('groupSel'),cur=sel.value||'__all';
+  sel.innerHTML='<option value="__all">Todos los grupos</option>'+groups.map(g=>`<option value="${esc(g)}">${esc(g)}</option>`).join('');
+  sel.value=groups.includes(cur)?cur:'__all';
+  const fil=sel.value==='__all'?orgData:orgData.filter(e=>(e.grupo||'general')===sel.value);
+  const all=latestPerUid(fil);const total=all.length;
+  const versions={};fil.forEach(e=>{versions[e.uid]=(versions[e.uid]||0)+1;});
+
+  const fc={DI:0,VI:0,CO:0,SI:0},kc={COM:0,COL:0,NEG:0,EV:0,CED:0},cc={};
+  all.forEach(e=>{fc[e.commDom]=(fc[e.commDom]||0)+1;kc[e.kilDom]=(kc[e.kilDom]||0)+1;const k=e.commDom+'+'+e.kilDom;cc[k]=(cc[k]||0)+1;});
+  const topC=Object.entries(fc).sort((a,b)=>b[1]-a[1])[0],topK=Object.entries(kc).sort((a,b)=>b[1]-a[1])[0];
+  const topCombo=Object.entries(cc).sort((a,b)=>b[1]-a[1])[0];
+  const gap=total>0?Object.entries(fc).sort((a,b)=>a[1]-b[1])[0]:null;
+
+  $('kCount').textContent=total;
+  $('kGroups').textContent=sel.value==='__all'?groups.length:'1';
+  $('kComm').textContent=total?COMM_LABELS[topC[0]]:'—';
+  $('kKil').textContent=total?KIL_LABELS[topK[0]]:'—';
+  $('kCombo').textContent=topCombo?(()=>{const[c,k]=topCombo[0].split('+');return COMM_AVATARS[c].char+' '+COMM_PROFILES[c].name+' + '+KIL_AVATARS[k].char+' '+KIL_PROFILES[k].name;})():'—';
+  $('kGap').textContent=gap?COMM_LABELS[gap[0]]+' ('+gap[1]+')':'—';
+  $('orgWelcome').textContent=total===1?'1 persona completó su perfil.':total+' personas completaron su perfil.';
+
+  let al='';
+  if(!cloudOk)al+='<div class="alert-box amber"><b>Modo de prueba:</b> aún no configuraste JSONBin, así que solo ves lo guardado en este navegador.</div>';
+  if(total===0)al+='<div class="alert-box amber"><b>Aún no hay perfiles guardados</b>'+(sel.value==='__all'?'.':' en este grupo.')+' Comparte el link para empezar.</div>';
+  else if(total>=3&&Object.values(fc).filter(v=>v>0).length<=2)al+='<div class="alert-box green"><b>Poca diversidad de estilos de comunicación:</b> el grupo se concentra en '+Object.values(fc).filter(v=>v>0).length+' estilo(s).</div>';
+  $('orgAlerts').innerHTML=al;
+
+  try{
+    if(orgCommChart)orgCommChart.destroy();
+    orgCommChart=new Chart($('orgCommChart'),{type:'doughnut',data:{labels:COMM_ORDER.map(k=>COMM_LABELS[k]),datasets:[{data:COMM_ORDER.map(k=>fc[k]),backgroundColor:COMM_ORDER.map(k=>COMM_COLORS[k]),borderColor:'#fff',borderWidth:2}]},
+      options:{responsive:true,aspectRatio:1.5,cutout:'58%',plugins:{legend:{position:'bottom',labels:{font:{size:11,weight:'600'},color:'#1E2A2F',padding:12}},tooltip:{callbacks:{label:c=>' '+c.parsed+' persona(s) · '+(total?Math.round(c.parsed/total*100):0)+'%'}}}}});
+    if(orgKilChart)orgKilChart.destroy();
+    orgKilChart=new Chart($('orgKilChart'),{type:'bar',data:{labels:KIL_ORDER.map(k=>KIL_LABELS[k]),datasets:[{data:KIL_ORDER.map(k=>kc[k]),backgroundColor:KIL_ORDER.map(k=>KIL_COLORS[k]),borderRadius:6,barThickness:22}]},
+      options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+c.parsed.x+' persona(s)'}}},scales:{x:{beginAtZero:true,ticks:{stepSize:1,font:{size:10},color:'#6C7378'},grid:{color:'rgba(0,0,0,0.06)'}},y:{ticks:{font:{size:11,weight:'600'},color:'#1E2A2F'},grid:{display:false}}}}});
+  }catch(e){}
+
+  const list=$('orgList');list.innerHTML='';
+  if(!total){list.innerHTML='<p style="color:var(--muted);font-size:13px;font-style:italic;padding:4px 0 8px">Sin perfiles todavía.</p>';}
+  all.sort((a,b)=>(b.ts||0)-(a.ts||0)).forEach(e=>{
+    const row=document.createElement('div');row.className='emp-row';
+    const v=versions[e.uid]||1;
+    row.innerHTML=`<div class="en"><span>${esc(e.name)}</span><span class="ed">${fmtFecha(e.ts)}</span></div>
+      <div class="eb"><span class="group-chip">${esc(e.grupo||'general')}</span> DNI ${esc(e.uid)}${v>1?' · '+v+' intentos':''}</div>
+      <div><span class="style-pill sp-${e.commDom.toLowerCase()}">${COMM_AVATARS[e.commDom].char} ${COMM_PROFILES[e.commDom].name}</span><span class="style-pill sp-${e.kilDom.toLowerCase()}">${KIL_AVATARS[e.kilDom].char} ${KIL_PROFILES[e.kilDom].name}</span></div>`;
+    row.onclick=()=>openModal(e);list.appendChild(row);
+  });
+  $('dlAllBtn').style.display=total?'flex':'none';
+}
+$('groupSel').onchange=renderOrg;
+$('previewBtn').onclick=()=>{
+  stopOrg();previewMode=true;
+  currentUser={uid:'vista-previa',n:'Vista previa',b:'',grupo:GROUP};
+  $('hiName').textContent='Vista previa ✦';$('hiSub').textContent='Así verá el test. Nada se guarda.';
+  $('resumeCard').style.display='none';
+  show('scTest');startCommTest();
+};
+
+// Generador de links por grupo
+function baseUrl(){return location.href.split('#')[0].split('?')[0];}
+function updateGroupLink(){const g=slug($('groupName').value);$('groupLink').value=baseUrl()+(g?'?grupo='+g:'');}
+$('groupName').addEventListener('input',updateGroupLink);
+$('copyLinkBtn').onclick=async()=>{
+  const v=$('groupLink').value;
+  try{await navigator.clipboard.writeText(v);toast('Link copiado ✓');}
+  catch(e){$('groupLink').select();document.execCommand&&document.execCommand('copy');toast('Link copiado ✓');}
+};
+
+// Ficha individual
+let modalEntry=null,mCommChart=null,mKilChart=null;
+function openModal(e){
+  modalEntry=e;
+  const fn=esc(firstName(e.name));
+  const cp=COMM_PROFILES[e.commDom],kp=KIL_PROFILES[e.kilDom],cav=COMM_AVATARS[e.commDom],kav=KIL_AVATARS[e.kilDom];
+  const cs=Object.assign({DI:0,VI:0,CO:0,SI:0},e.commScores),ks=Object.assign({COM:0,COL:0,NEG:0,EV:0,CED:0},e.kilScores);
+  $('modalName').textContent=e.name;
+  $('modalBiz').textContent=['DNI '+e.uid,'Grupo: '+(e.grupo||'general'),'guardado: '+fmtFecha(e.ts)].join(' · ');
+  $('modalContent').innerHTML=`
+    <div style="display:flex;gap:8px;margin-bottom:14px">
+      <div style="flex:1;background:var(--acc-bg);border:1px solid var(--acc-border);border-radius:12px;padding:10px;text-align:center"><div style="font-size:22px">${cav.char}</div><div style="font-size:12.5px;font-weight:700;color:var(--pri);margin-top:3px">${cp.name}</div></div>
+      <div style="flex:1;background:#E5F4EC;border:1px solid #B5DEC6;border-radius:12px;padding:10px;text-align:center"><div style="font-size:22px">${kav.char}</div><div style="font-size:12.5px;font-weight:700;color:var(--pri);margin-top:3px">${kp.name}</div></div>
+    </div>
+    <div class="step-label" style="margin-bottom:8px"><span class="sl-dot"></span>Comunicación</div>
+    <div class="coach-block">${coachHtml('🧭',cav,cp,fn,'¿Con quién comunicarse primero?',buildPartnerText(fn,e.commDom,cs))}</div>
+    <div class="card chart-card"><div class="cc-title">Radar de comunicación</div><canvas id="mCommRadar" height="200"></canvas></div>
+    <div class="step-label" style="margin-bottom:8px"><span class="sl-dot"></span>Manejo de conflictos</div>
+    <div class="coach-block">${coachHtml('🔮',kav,kp,fn,'¿Cuándo usarlo?',kp.when(fn))}</div>
+    <div class="card chart-card"><div class="cc-title">Radar de manejo de conflictos</div><canvas id="mKilRadar" height="220"></canvas></div>
+    <div class="kil-grid-wrap" style="margin-bottom:14px">${buildKilGrid(ks)}</div>
+    <div class="synth">${synthHtml(e.commDom,e.kilDom,e.name,false)}</div>`;
+  $('modal').classList.add('on');
+  try{
+    if(mCommChart)mCommChart.destroy();if(mKilChart)mKilChart.destroy();
+    mCommChart=new Chart($('mCommRadar').getContext('2d'),radarConfig(COMM_ORDER.map(k=>COMM_LBL[k]),COMM_ORDER.map(k=>cs[k]),RADAR_COMM,4));
+    mKilChart=new Chart($('mKilRadar').getContext('2d'),radarConfig(KIL_ORDER.map(k=>KIL_LBL[k]),KIL_ORDER.map(k=>ks[k]),RADAR_KIL,4));
+  }catch(err){}
+}
+function closeModal(){$('modal').classList.remove('on');}
+$('modal').addEventListener('click',e=>{if(e.target===$('modal'))closeModal();});
+$('modalPdfBtn').onclick=async()=>{
+  if(!modalEntry)return;const b=$('modalPdfBtn'),o=b.textContent;b.disabled=true;b.textContent='Generando PDF…';
+  const ok=await exportPdf(modalEntry,false);limpiarEstadoTest();
+  b.disabled=false;b.textContent=o;if(!ok)toast('No se pudo generar el PDF.');
+};
+$('dlAllBtn').onclick=async()=>{
+  const sel=$('groupSel').value;
+  const fil=sel==='__all'?orgData:orgData.filter(e=>(e.grupo||'general')===sel);
+  const people=latestPerUid(fil);if(!people.length)return;
+  if(!confirm('Se descargará el último perfil de '+people.length+' persona(s) en un ZIP. ¿Continuar?'))return;
+  const b=$('dlAllBtn'),st=$('dlStatus');b.disabled=true;st.className='save-status loading';
+  const files=[];const used={};
+  for(let i=0;i<people.length;i++){
+    st.textContent='Generando '+(i+1)+' de '+people.length+' — '+people[i].name+'…';
+    const f=await exportPdf(people[i],true);
+    if(f){let fnm=f.filename;used[fnm]=(used[fnm]||0)+1;if(used[fnm]>1)fnm=fnm.replace('.pdf','_'+used[fnm]+'.pdf');
+      const folder=sel==='__all'?(people[i].grupo||'general')+'/':'';files.push({name:folder+fnm,blob:f.blob});}
+  }
+  limpiarEstadoTest();b.disabled=false;
+  if(!files.length){st.className='save-status err';st.textContent='⚠️ No se pudo generar ningún PDF.';return;}
+  st.textContent='Empaquetando…';
+  const zip=new JSZip();files.forEach(f=>zip.file(f.name,f.blob));
+  triggerBlobDownload(await zip.generateAsync({type:'blob'}),'BrujulaLiderazgo_'+(sel==='__all'?'todos':sel)+'.zip');
+  st.className='save-status ok';st.textContent='✅ '+files.length+' PDF(s) descargado(s).';
+  setTimeout(()=>{st.textContent='';st.className='save-status';},6000);
+};
+</script>
+</body>
+</html>
