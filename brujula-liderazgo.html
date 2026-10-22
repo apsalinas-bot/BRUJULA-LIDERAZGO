@@ -253,6 +253,17 @@ label.lbl .opt-tag{font-weight:500;color:var(--muted)}
 .radar-wrap{padding:12px 0 4px;display:flex;flex-direction:column;align-items:center}
 .radar-wrap canvas{max-width:100%;height:auto}
 
+/* MENSAJE SECRETO */
+.secret{position:relative;overflow:hidden;border-radius:var(--r);padding:24px 20px 22px;margin-bottom:16px;color:#3A2B22;
+  background:linear-gradient(160deg,#FFF8EF 0%,#FDEBDC 100%);border:1px solid #F0C9A6;box-shadow:0 10px 30px rgba(207,106,51,.18);animation:secretIn .9s cubic-bezier(.2,.8,.2,1)}
+@keyframes secretIn{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+.secret::before{content:'♊';position:absolute;right:14px;top:6px;font-size:64px;color:#CF6A33;opacity:.08}
+.secret .s-key{font-size:34px;display:block;margin-bottom:6px;animation:float 3s ease-in-out infinite}
+.secret h2{font-size:20px;color:var(--pri-d);margin-bottom:14px}
+.secret p{font-size:14.5px;line-height:1.75;margin-bottom:12px}
+.secret p strong{color:#B5501F}
+.secret .s-hi{font-weight:800;color:var(--pri-d)}
+.secret .s-sign{text-align:right;font-weight:800;color:var(--pri);font-size:15px;margin-top:4px}
 /* BONUS TRACK */
 .bonus{position:relative;overflow:hidden;border-radius:var(--r);padding:22px 18px 20px;margin:4px 0 14px;color:#E9E4FF;
   background:radial-gradient(circle at 20% 15%,rgba(255,255,255,.9) 0 1px,transparent 1.5px),radial-gradient(circle at 78% 22%,rgba(255,255,255,.8) 0 1px,transparent 1.5px),radial-gradient(circle at 60% 70%,rgba(255,255,255,.7) 0 1px,transparent 1.5px),radial-gradient(circle at 35% 85%,rgba(255,255,255,.8) 0 1px,transparent 1.5px),radial-gradient(circle at 90% 60%,rgba(255,255,255,.6) 0 1px,transparent 1.5px),linear-gradient(150deg,#1B1640 0%,#2E2468 55%,#4A2F6E 100%)}
@@ -297,7 +308,6 @@ label.lbl .opt-tag{font-weight:500;color:var(--muted)}
 
       <div class="gate-err" id="startErr"></div>
       <button class="btn acc full" id="startBtn" style="margin-top:6px">Comenzar ✦</button>
-      <div class="privacy">🔒 Tus respuestas y tu perfil los podrá ver la persona que te compartió este enlace.</div>
     </div>
 
     <button class="org-link" id="orgToggle">Soy quien organiza</button>
@@ -432,7 +442,7 @@ label.lbl .opt-tag{font-weight:500;color:var(--muted)}
 <div class="screen" id="scOrg">
   <div class="top">
     <div class="eyebrow">🧭 Brújula de Liderazgo · Panel</div>
-    <h1>Resultados del <em>grupo</em></h1>
+    <h1 id="orgTitle">Resultados del <em>grupo</em></h1>
     <p id="orgWelcome">Comunicación y manejo de conflictos de las personas que respondieron.</p>
   </div>
   <div class="acc-bar"></div>
@@ -441,7 +451,8 @@ label.lbl .opt-tag{font-weight:500;color:var(--muted)}
     <button class="logout-btn" onclick="doLogout()">Salir</button>
   </div>
   <div class="wrap">
-    <div class="card" style="padding:14px 16px">
+    <div id="secretBox"></div>
+    <div class="card" id="groupCard" style="padding:14px 16px">
       <div class="step-label"><span class="sl-dot"></span>Ver grupo</div>
       <div class="filter-row" style="margin-top:6px">
         <select id="groupSel"><option value="__all">Todos los grupos</option></select>
@@ -487,8 +498,8 @@ label.lbl .opt-tag{font-weight:500;color:var(--muted)}
       <div class="link-out"><input id="groupLink" type="text" readonly><button class="btn acc sm" id="copyLinkBtn">Copiar</button></div>
     </div>
 
-    <div class="section-title">Vista previa</div>
-    <div class="card">
+    <div class="section-title" id="previewTitle">Vista previa</div>
+    <div class="card" id="previewCard">
       <p class="hint" style="margin-bottom:10px">Haz el test tal como lo verá ella, con el bonus incluido. Nada de lo que respondas en la vista previa se guarda.</p>
       <button class="btn acc full" id="previewBtn">👁 Probar el test (vista previa)</button>
     </div>
@@ -524,8 +535,12 @@ const CONFIG = {
   BIN_ID:     'REEMPLAZA_CON_TU_BIN_ID',
   KEY:        'REEMPLAZA_CON_TU_KEY',
   KEY_HEADER: 'X-Access-Key',
-  // SHA-256 de la contraseña del organizador (por defecto: brujula2026)
+  // SHA-256 de la contraseña de administrador (vista normal del panel)
   ORG_PASS_SHA256: '899ed04223778645fc6b2e89517c4a2c1a64281144207cca87cd915c6b173229',
+  // SHA-256 de la contraseña "secreta": abre el panel con el mensaje especial
+  SECRET_PASS_SHA256: '58fd4439c883540cd585c671298f656fccde09954303e35ac163ca0187fda86b',
+  // Mensaje especial cifrado: solo se puede leer con la contraseña secreta
+  SECRET_MSG: 'dvCvYo3BCV9pFDyIaHO5xnKMoEwLGvHbrwANHI8zP7NBZtRCBVbeaQMh1PgAsN7ZJhnuiwCYL9XrOQf77qgS8IktWNArpRkJwGG3rX7ZGqoFt1wHh8SC8grLpaHGccjql+4mEmZV726UwSXtez2Eag/BtLdgcRHFj2LPEY3NUfefVltoLTjp8trldRwDcvYQ1tWuvn+l1mMIF6j0/HX2//lDtxnf3wd3/Mis17DqLPfhg8U5S3ZsZhhxYtyRc2+lS3yQLFT3C/hVjiAE5rBvibfORGbg/GpODfMMlnmzxoESRSGVe3hzjE22kSW+XF013x4ammMMrba6FbUF9v5i8ZqVLxPVmIwzIWCeZqIivIf+M0kH4Vovjbgomdv1PlOjiYHmeDkFvz/jVyO7ZCN4xmrZmnpZDRersUIeTw+KlzzWZJ4LAVV8gdIml497pgS3zYKQMqVKKWJwaCFVijR7yYgGzNwCYshzixV5O2GP7UZFSNzdYKMtzm4FN4RPBNF5G0CRZZ6FAKtH083HfhGCOOHyKGguZGLhkvC80KJEYyE=',
   POLL_MS:    30000
 };
 /* Bonus track: tarjeta sorpresa al final del resultado.
@@ -792,14 +807,43 @@ $('startBtn').onclick=()=>{
 ['inName','inDni'].forEach(id=>$(id).addEventListener('keydown',e=>{if(e.key==='Enter')$('startBtn').click();}));
 $('inDni').addEventListener('input',e=>{e.target.value=e.target.value.replace(/\D/g,'').slice(0,8);});
 $('orgToggle').onclick=()=>{const p=$('orgPanel');p.style.display=p.style.display==='block'?'none':'block';if(p.style.display==='block')$('inOrg').focus();};
+let secretMsg=null;
+function decryptSecret(pass){
+  try{
+    const ct=Uint8Array.from(atob(CONFIG.SECRET_MSG),c=>c.charCodeAt(0));
+    let ks=[];for(let i=0;ks.length<ct.length;i++){const h=sha256(pass+':'+i);for(let j=0;j<64;j+=2)ks.push(parseInt(h.substr(j,2),16));}
+    const pt=ct.map((b,i)=>b^ks[i]);
+    return JSON.parse(new TextDecoder('utf-8').decode(pt));
+  }catch(e){return null;}
+}
+function setOrgMode(secret){
+  ['groupCard','previewTitle','previewCard'].forEach(id=>{const el=$(id);if(el)el.style.display=secret?'none':'';});
+  $('orgTitle').innerHTML=secret?'Hola, <em>Pamela</em> ✦':'Resultados del <em>grupo</em>';
+  if(!secret)$('secretBox').innerHTML='';
+}
 $('orgBtn').onclick=()=>{
-  if(sha256($('inOrg').value)===CONFIG.ORG_PASS_SHA256){$('orgErr').textContent='';$('inOrg').value='';show('scOrg');startOrg();}
-  else $('orgErr').textContent='Contraseña incorrecta.';
+  const pw=$('inOrg').value,h=sha256(pw);
+  if(h===CONFIG.ORG_PASS_SHA256){secretMsg=null;}
+  else if(h===CONFIG.SECRET_PASS_SHA256){secretMsg=decryptSecret(pw);}
+  else{$('orgErr').textContent='Contraseña incorrecta.';return;}
+  $('orgErr').textContent='';$('inOrg').value='';
+  setOrgMode(!!secretMsg);
+  show('scOrg');startOrg();
 };
+function renderSecret(people){
+  if(!secretMsg){$('secretBox').innerHTML='';return;}
+  const m=secretMsg;
+  $('secretBox').innerHTML=`<div class="secret">
+    <span class="s-key">🗝️</span>
+    <h2>${esc(m.titulo)}</h2>
+    <p class="s-hi">${esc(m.saludo)}</p>
+    ${(m.parrafos||[]).map(t=>`<p>${esc(t)}</p>`).join('')}
+    <div class="s-sign">${esc(m.firma)}</div></div>`;
+}
 $('inOrg').addEventListener('keydown',e=>{if(e.key==='Enter')$('orgBtn').click();});
 
 function doLogout(){
-  clearTimeout(retryTimer);stopOrg();resetSaveUi();previewMode=false;
+  clearTimeout(retryTimer);stopOrg();resetSaveUi();previewMode=false;secretMsg=null;renderOrg.secretDone=false;setOrgMode(false);
   currentUser=null;phase=1;qi=0;commAns={};kilAns={};results=null;
   commScores={DI:0,VI:0,CO:0,SI:0};kilScores={COM:0,COL:0,NEG:0,EV:0,CED:0};
   ['inName','inDni','inOrg'].forEach(id=>$(id).value='');
@@ -1285,6 +1329,7 @@ function renderOrg(){
   sel.value=groups.includes(cur)?cur:'__all';
   const fil=sel.value==='__all'?orgData:orgData.filter(e=>(e.grupo||'general')===sel.value);
   const all=latestPerUid(fil);const total=all.length;
+  if(secretMsg&&!renderOrg.secretDone){renderSecret(all);renderOrg.secretDone=true;}
   const versions={};fil.forEach(e=>{versions[e.uid]=(versions[e.uid]||0)+1;});
 
   const fc={DI:0,VI:0,CO:0,SI:0},kc={COM:0,COL:0,NEG:0,EV:0,CED:0},cc={};
@@ -1299,13 +1344,13 @@ function renderOrg(){
   $('kKil').textContent=total?KIL_LABELS[topK[0]]:'—';
   $('kCombo').textContent=topCombo?(()=>{const[c,k]=topCombo[0].split('+');return COMM_AVATARS[c].char+' '+COMM_PROFILES[c].name+' + '+KIL_AVATARS[k].char+' '+KIL_PROFILES[k].name;})():'—';
   $('kGap').textContent=gap?COMM_LABELS[gap[0]]+' ('+gap[1]+')':'—';
-  $('orgWelcome').textContent=total===1?'1 persona completó su perfil.':total+' personas completaron su perfil.';
+  $('orgWelcome').textContent=secretMsg?'Aquí están tus resultados… y algo más.':(total===1?'1 persona completó su perfil.':total+' personas completaron su perfil.');
 
   let al='';
   if(!cloudOk)al+='<div class="alert-box amber"><b>Modo de prueba:</b> aún no configuraste JSONBin, así que solo ves lo guardado en este navegador.</div>';
   if(total===0)al+='<div class="alert-box amber"><b>Aún no hay perfiles guardados</b>'+(sel.value==='__all'?'.':' en este grupo.')+' Comparte el link para empezar.</div>';
   else if(total>=3&&Object.values(fc).filter(v=>v>0).length<=2)al+='<div class="alert-box green"><b>Poca diversidad de estilos de comunicación:</b> el grupo se concentra en '+Object.values(fc).filter(v=>v>0).length+' estilo(s).</div>';
-  $('orgAlerts').innerHTML=al;
+  $('orgAlerts').innerHTML=secretMsg?'':al;
 
   try{
     if(orgCommChart)orgCommChart.destroy();
