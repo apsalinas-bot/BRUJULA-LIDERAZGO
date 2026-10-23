@@ -548,7 +548,7 @@ const CONFIG = {
    Pon activo:false para quitarla. Vista previa: botón en el panel del organizador. */
 /* Acceso: solo los DNI cuyo SHA-256 esté en esta lista pueden hacer el test.
    (El DNI no queda escrito en el código.) Déjala vacía [] para abrir el acceso a todos. */
-const ACCESO_DNI_SHA256 = ['a711b7ad5601276460a312eae08500622868c2a9169dc15070a66152f574ca83'];
+const ACCESO_DNI_SHA256 = ['a711b7ad5601276460a312eae08500622868c2a9169dc15070a66152f574ca83,'8d9408a0ea52e9c0a344486dc50f53e895364a2c9e44fd7b7aeefd9497df4cae'];
 const BONUS = { activo:true, dniSha256:'a711b7ad5601276460a312eae08500622868c2a9169dc15070a66152f574ca83', signo:'Géminis' };
 const cloudOk = !!CONFIG.BIN_ID && !CONFIG.BIN_ID.startsWith('REEMPLAZA');
 const API = 'https://api.jsonbin.io/v3/b/' + CONFIG.BIN_ID;
